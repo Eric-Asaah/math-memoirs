@@ -2,23 +2,127 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Eric Asaah: Math Memoirs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Memoirs | Eric Asaah</title>
     <style>
-        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
-        h1 { border-bottom: 2px solid #1e5aa0; padding-bottom: 10px; color: #1e5aa0; }
-        .entry { margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-left: 5px solid #1e5aa0; }
-        a { color: #1e5aa0; text-decoration: none; font-weight: bold; }
-        a:hover { text-decoration: underline; }
+        :root {
+            --paper: #fdfaf3; /* Eggshell/Parchment */
+            --ink: #2c3e50;
+            --blueprint: #1e5aa0;
+            --grid: rgba(30, 90, 160, 0.05);
+        }
+        body {
+            background-color: var(--paper);
+            background-image: linear-gradient(var(--grid) 1px, transparent 1px), 
+                              linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 30px 30px; /* Subtle grid paper feel */
+            color: var(--ink);
+            font-family: 'Georgia', serif;
+            line-height: 1.7;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+        header {
+            border-bottom: 3px double var(--ink);
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .subtitle {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .entry-card {
+            background: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .entry-card::before {
+            content: "ENTRY";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--blueprint);
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            font-family: sans-serif;
+        }
+        h2 {
+            margin-top: 0;
+            color: var(--blueprint);
+            font-family: sans-serif;
+        }
+        .timestamp {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #888;
+            display: block;
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 25px;
+            background-color: var(--blueprint);
+            color: white;
+            text-decoration: none;
+            font-family: sans-serif;
+            font-weight: bold;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background-color: #154375;
+            transform: translateY(-2px);
+        }
+        footer {
+            margin-top: 100px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1>Mathematical Memoirs</h1>
-    <p>A personal record of discoveries, speculations, and proofs.</p>
-    
-    <div class="entry">
-        <h2>Entry 01: The Transversal Invariant</h2>
-        <p>Exploring a visual anomaly in a Digital SAT geometry problem.</p>
-        <a href="Math_memoir_entry_1.pdf" target="_blank">Read PDF</a>
+
+    <header>
+        <h1>Mathematical Memoirs</h1>
+        <p class="subtitle">A Personal Record of Discoveries, Speculations, and Proofs</p>
+    </header>
+
+    <div class="entry-card">
+        <span class="timestamp">ENTRY 01 // 11 MAY 2026 // VERIFIED</span>
+        <h2>The Transversal Invariant</h2>
+        <p>It started with a single, unremarkable SAT question. This entry explores a "visual anomaly" found in a transversal geometry problem that renders traditional bookkeeping obsolete.</p>
+        <a href="Math_memoir_entry_1.pdf" class="btn">Open Manuscript</a>
     </div>
+
+    <!-- Future entry placeholder -->
+    <div class="entry-card" style="opacity: 0.6;">
+        <span class="timestamp">ENTRY 02 // COMING SOON</span>
+        <h2>The Five-In-One Pythagorean Proof</h2>
+        <p>A unified derivation of the Pythagorean identity via recursive subdivision and geometric series.</p>
+        <span class="btn" style="background: #ccc; cursor: not-allowed;">Awaiting Release</span>
+    </div>
+
+    <footer>
+        Maintained by Eric Asaah &copy; 2026<br>
+        <small>Formulated with LaTeX and Curiosity</small>
+    </footer>
+
 </body>
 </html>
