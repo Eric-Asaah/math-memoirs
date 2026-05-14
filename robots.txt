@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://eric-asaah.github.io/math-memoirs/sitemap.xml

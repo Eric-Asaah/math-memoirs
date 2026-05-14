@@ -1,0 +1,164 @@
+{
+  "_whereToPutThings": {
+    "socialIcons": "site.connect.social — add an object with network (youtube, github, instagram, …), href, and label. Networks not listed here will not appear. Unknown networks get a generic link icon.",
+    "googleForm": "site.connect.googleForm.href — your Google Form URL for anonymous feedback. Leave \"\" until ready.",
+    "extraTextButtons": "site.connect.links — optional public links only (e.g. Ko-fi, Buy Me a Coffee, newsletter). Never put private phone numbers here.",
+    "feedbackButton": "site.connect.feedback.href — GitHub issue template for this site (should open issues on THIS repo).",
+    "footerRepoLine": "site.footer.repoUrl and site.footer.repoLabel",
+    "publicByline": "site.byline — keep to what you are comfortable publishing (name only is fine).",
+    "heroImages": "site.images.logoUrl and/or site.images.portraitUrl — relative paths such as assets/logo.png. If the GitHub repo is public, those files are public too; use an abstract logo if you prefer not to show a face.",
+    "trafficAnalytics": "site.analytics — set plausibleDomain and/or googleMeasurementId when you accept the privacy trade-offs; leave empty to send nothing.",
+    "manuscriptSearch": "The search field is in index.html (id manuscript-search). It filters entries by title, body, tags, PDF filename, and id — no server required.",
+    "listUi": "site.listUi.bodyCharsBeforeToggle and maxEntriesBeforeShowAll — read more / view all thresholds."
+  },
+  "_howToAddChapter": "Append to entries. Push. On GitHub Pages, site.json is fetched automatically. After local edits to site.json, run: node inject-site-embedded.cjs. PDF clicks are not tracked unless you enable analytics.",
+  "site": {
+    "baseUrl": "https://eric-asaah.github.io/math-memoirs/",
+    "documentTitle": "Mathematical Memoirs — Eric Asaah",
+    "metaDescription": "Notes written for readers who enjoy exploratory mathematics.",
+    "ogImage": "",
+    "byline": "Eric Asaah",
+    "ruleLabel": "A Working Notebook",
+    "heading": {
+      "line1": "Mathematical",
+      "line2Italic": "Memoirs"
+    },
+    "subtitle": "Notes written for readers who enjoy exploratory mathematics.",
+    "projectLabel": "Project I",
+    "images": {
+      "logoUrl": "assets/logo.png",
+      "portraitUrl": "assets/headshot.png",
+      "portraitAlt": "Eric Asaah"
+    },
+    "analytics": {
+      "plausibleDomain": "",
+      "googleMeasurementId": ""
+    },
+    "discussion": {
+      "enabled": false,
+      "type": "utterances",
+      "repo": "Eric-Asaah/math-memoirs",
+      "issueTerm": "pathname",
+      "theme": "preferred-color-scheme"
+    },
+    "footer": {
+      "repo": "https://github.com/Eric-Asaah/math-memoirs",
+      "author": "Eric Asaah",
+      "license": "CC BY-NC-ND 4.0",
+      "privacyNote": "Likes are stored only in your browser. No analytics are loaded. You can send me direct feedback if you want to."
+    },
+    "listUi": {
+      "bodyCharsBeforeToggle": 200,
+      "maxEntriesBeforeShowAll": 3
+    },
+    "connect": {
+      "heading": "Public channels & feedback",
+      "intro": "Use GitHub or the Google Form for feedback. If you use the form, please include your email if you want a response.",
+      "googleForm": {
+        "label": "Anonymous feedback (Google Form)",
+        "href": ""
+      },
+      "social": [
+        {
+          "network": "github",
+          "href": "https://github.com/Eric-Asaah/math-memoirs",
+          "label": "GitHub repository"
+        },
+        {
+          "network": "youtube",
+          "href": "https://www.youtube.com/@Emaphy",
+          "label": "YouTube channel"
+        },
+        {
+          "network": "instagram",
+          "href": "",
+          "label": "Instagram"
+        },
+        {
+          "network": "facebook",
+          "href": "",
+          "label": "Facebook"
+        },
+        {
+          "network": "linkedin",
+          "href": "",
+          "label": "LinkedIn"
+        },
+        {
+          "network": "x",
+          "href": "",
+          "label": "X (Twitter)"
+        },
+        {
+          "network": "tiktok",
+          "href": "https://www.tiktok.com/tag/emaphy",
+          "label": "TikTok"
+        },
+        {
+          "network": "whatsapp",
+          "href": "",
+          "label": "WhatsApp channel"
+        },
+        {
+          "network": "discord",
+          "href": "",
+          "label": "Discord"
+        },
+        {
+          "network": "email",
+          "href": "",
+          "label": "Email"
+        },
+        {
+          "network": "skool",
+          "href": "",
+          "label": "Skool community"
+        }
+      ],
+      "links": [],
+      "feedback": {
+        "label": "GitHub issue",
+        "href": "https://github.com/Eric-Asaah/math-memoirs/issues/new?labels=feedback&title=Mathematical%20Memoirs%20feedback"
+      }
+    },
+    "placeholder": {
+      "symbol": "∴",
+      "text": "Further entries in preparation. New discoveries will appear here as they are written up and verified."
+    }
+  },
+  "entries": [
+    {
+      "id": "transversal-invariant",
+      "title": "The Transversal Invariant",
+      "body": "I got the question wrong the first time.  The SAT asked: “A transversal cuts two parallel lines … which of these sums could not equal four of the angles?”  The textbook expects you to list all five cases, but I was lazy and started looking for a way out.\n\nWhat fell out of a Desmos accident was a single, fixed point that every possible sum line must pass through.  Once you have that point, you can test all four answer choices instantly:\n\n$$x_p = \\frac{90 - t}{k}, \\qquad y_p = 90n$$\n\nPlug $x_p$ into each candidate expression.  The one that doesn’t give $90n$ is impossible.  No casework, no sign‑tracking, no “is it $a$ or $b$?”\n\nThe full manuscript follows the discovery from the first mistake to the proof, including the failed attempts and the intermediate machinery that almost worked but didn’t.\n\nIf you only take one thing from this: every transversal‑angle sum problem has a single pivot point.  Find it once, and the test does the rest.",
+      "tags": [
+        "Euclidean Geometry",
+        "Angle Relations",
+        "SAT",
+        "Parallel Lines",
+        "Angle sum",
+        "Invariant",
+        "Shortcut"
+      ],
+      "datetime": "2026-05-11",
+      "status": "verified",
+      "pdf": "manuscripts/Math_memoir_entry_1.pdf",
+      "manuscriptLabel": "Open manuscript"
+    },
+    {
+      "id": "absolute-value-invariant-explorations",
+      "title": "The Absolute Value Invariant",
+      "body": "Every time I see an absolute value equation on the SAT, I reach for the ±constant trick — set the inside equal to the number, then to its negative, solve the two linear pieces.  It’s reliable, but I couldn’t shake the feeling there was a pattern waiting underneath.  So I parameterised: for $a|bx+c| = d$ with $\\frac{d}{a}>0$, the two solutions always add up to\n\n$$S = -\\frac{2c}{b}$$\n\nThe $d/a$ terms cancel cleanly.  The sum depends only on the coefficient of $x$ and the constant inside the absolute value — the rest of the equation is just noise.\n\nThat’s the part that works right now.  But I’m still chasing three questions:\n\n• **Multiple absolute value expressions** — what if an equation has $|bx+c| + |px+q| = k$?  Does a similar invariant hold?\n\n• **Squaring equivalence** — squaring both sides of $|L(x)| = R(x)$ often gives a quadratic whose solutions match the original.  Is that symmetry hiding a deeper invariant?\n\n• **Non‑linear insides** — what if the expression inside the absolute value is quadratic, not linear?  Does the symmetry argument break, or just reshape itself?\n\nThis entry is my working notebook for those extensions.  The linear case is solved; the rest is still under construction.  If you like seeing a shortcut while it’s still being born, follow along — I’ll post what I find, even the messy attempts.",
+      "tags": [
+        "Absolute Value",
+        "Sum of Solutions",
+        "Invariant",
+        "Open Questions",
+        "In Progress",
+        "Shortcut"
+      ],
+      "status": "pending",
+      "lockedLabel": "Exploring"
+    }
+  ]
+}

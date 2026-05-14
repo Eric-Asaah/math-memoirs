@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="google-site-verification" content="ur1dHfD6eyCLlcKZRD3BWW0RENltrezXWY5MAaaNfuw" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mathematical Memoirs — Eric Asaah</title>
+    <meta name="description" content="Notes written for readers who enjoy exploratory mathematics." />
+    <meta property="og:title" content="Mathematical Memoirs — Eric Asaah" />
+    <meta property="og:description" content="Notes written for readers who enjoy exploratory mathematics." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Mathematical Memoirs — Eric Asaah" />
+    <meta name="twitter:description" content="Notes written for readers who enjoy exploratory mathematics." />
+    <link rel="canonical" id="canonical-link" href="" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@300;400&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0f0e0c;
+            --surface: #161410;
+            --card: #1c1916;
+            --card-pending: #1a1714;
+            --border: rgba(210, 170, 100, 0.18);
+            --border-hi: rgba(210, 170, 100, 0.45);
+            --gold: #c9a84c;
+            --gold-pale: #e8d09a;
+            --gold-dim: #7a5e28;
+            --ink: #ede8dc;
+            --ink-muted: #9a9080;
+            --ink-faint: #4a453c;
+            --ink-placeholder: #7a7560;
+            --red-mark: #8b3a3a;
+            --verified: #2e5c3e;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'IM Fell English', Georgia, serif;
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 39px,
+                    rgba(201, 168, 76, 0.015) 39px,
+                    rgba(201, 168, 76, 0.015) 40px),
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 39px,
+                    rgba(201, 168, 76, 0.01) 39px,
+                    rgba(201, 168, 76, 0.01) 40px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 0 28px 120px;
+        }
+
+        header {
+            padding: 80px 0 48px;
+            text-align: center;
+        }
+
+        .header-rule {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .header-rule::before,
+        .header-rule::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border-hi), transparent);
+        }
+
+        .header-rule span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.25em;
+            color: var(--gold-dim);
+            text-transform: uppercase;
+        }
+
+        .site-label {
+            font-family: 'IM Fell English', monospace;
+            font-size: 20px;
+            letter-spacing: 0.2em;
+            color: var(--gold-dim);
+            text-transform: none;
+            margin-bottom: 18px;
+        }
+
+        .header-visual {
+            margin-bottom: 28px;
+        }
+
+        .portrait-slot {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+        }
+
+        .portrait-slot--placeholder {
+            border-style: dashed;
+            padding: 12px;
+        }
+
+        .portrait-slot-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.06em;
+            line-height: 1.45;
+            color: var(--ink-faint);
+            text-align: center;
+            text-transform: none;
+        }
+
+        .portrait-slot__img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .portrait-slot__img[hidden] {
+            display: none !important;
+        }
+
+        .portrait-slot:not(.portrait-slot--placeholder) {
+            border-style: solid;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.6rem, 7vw, 4.2rem);
+            font-weight: 900;
+            color: var(--gold-pale);
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+            margin-bottom: 18px;
+        }
+
+        h1 em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .subtitle {
+            font-family: 'IM Fell English', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--ink-muted);
+            max-width: 520px;
+            margin: 0 auto 36px;
+            line-height: 1.6;
+        }
+
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .header-meta span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--ink-faint);
+            letter-spacing: 0.1em;
+        }
+
+        .header-meta span b {
+            color: var(--gold-dim);
+            font-weight: 400;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 40px 0 36px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider-glyph {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--gold-dim);
+            line-height: 1;
+        }
+
+        .connect-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 28px 32px 30px;
+            margin-top: 48px;
+            margin-bottom: 44px;
+        }
+
+        .connect-panel[hidden] {
+            display: none !important;
+        }
+
+        .connect-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gold-pale);
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+        }
+
+        .connect-intro {
+            font-size: 0.95rem;
+            color: var(--ink-muted);
+            margin-bottom: 20px;
+            max-width: 42rem;
+        }
+
+        .connect-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .social-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .social-row--platforms {
+            justify-content: center;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--border);
+            color: var(--gold);
+            background: rgba(201, 168, 76, 0.06);
+            text-decoration: none;
+            transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+        }
+
+        .social-link:hover {
+            border-color: var(--gold-dim);
+            color: var(--gold-pale);
+            background: rgba(201, 168, 76, 0.12);
+        }
+
+        .social-link:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        .social-link svg {
+            display: block;
+        }
+
+        .btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 10px 18px;
+            border: 1px solid var(--border);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--gold-dim);
+            border-color: var(--gold-dim);
+            color: var(--ink);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold);
+            color: var(--bg);
+            border-color: var(--gold);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--gold);
+            border-color: var(--gold-dim);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            color: var(--gold-pale);
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 28px;
+        }
+
+        .entries-loading {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 24px;
+        }
+
+        .load-error {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 0.95rem;
+            color: #d4b8b0;
+            background: rgba(139, 58, 58, 0.12);
+            border: 1px solid rgba(139, 58, 58, 0.35);
+            padding: 18px 20px;
+            margin-bottom: 28px;
+            line-height: 1.65;
+        }
+
+        .load-error .load-error-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            margin-bottom: 14px;
+            color: #e8c9c2;
+        }
+
+        .load-error p {
+            margin-bottom: 12px;
+        }
+
+        .load-error p:last-child {
+            margin-bottom: 0;
+        }
+
+        .load-error code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82em;
+            color: var(--gold-pale);
+            word-break: break-all;
+        }
+
+        .load-error[hidden] {
+            display: none !important;
+        }
+
+        .entry-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 36px 40px 32px;
+            margin-bottom: 24px;
+            position: relative;
+            transition: border-color 0.25s ease;
+            cursor: default;
+        }
+
+        .entry-card:hover {
+            border-color: var(--border-hi);
+        }
+
+        .entry-stamp {
+            position: absolute;
+            top: -1px;
+            right: 28px;
+            background: var(--verified);
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+        }
+
+        .entry-stamp.pending {
+            background: var(--red-mark);
+            color: #ffffff;
+        }
+
+        .entry-header {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 6px;
+        }
+
+        .entry-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--gold-dim);
+            letter-spacing: 0.1em;
+            flex-shrink: 0;
+        }
+
+        .entry-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--ink-faint);
+            letter-spacing: 0.05em;
+            margin-left: auto;
+        }
+
+        time.entry-date {
+            font-variant-numeric: tabular-nums;
+        }
+
+        h2.entry-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--gold-pale);
+            margin-bottom: 12px;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+        }
+
+        .entry-body {
+            font-family: 'IM Fell English', serif;
+            font-size: 0.97rem;
+            color: var(--ink-muted);
+            line-height: 1.75;
+            margin-bottom: 0;
+        }
+
+        .entry-body-wrap {
+            margin-bottom: 20px;
+        }
+
+        .entry-body--clamp {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 4;
+            line-clamp: 4;
+            overflow: hidden;
+        }
+
+        .entry-card--expanded .entry-body--clamp {
+            display: block;
+            -webkit-line-clamp: unset;
+            line-clamp: unset;
+            overflow: visible;
+        }
+
+        .read-more-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 10px;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--gold-dim);
+            cursor: pointer;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .read-more-btn:hover {
+            border-color: var(--gold-dim);
+            color: var(--gold);
+        }
+
+        .entries-section .entry-collapsed {
+            display: none;
+        }
+
+        .entries-section.entries-section--expanded .entry-collapsed,
+        .entries-section.entries-section--filter-expand .entry-collapsed {
+            display: block;
+        }
+
+        .btn-show-more {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 8px auto 28px;
+            padding: 10px 16px;
+            border: 1px dashed var(--gold-dim);
+            background: rgba(201, 168, 76, 0.06);
+            color: var(--gold-pale);
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-show-more:hover {
+            background: rgba(201, 168, 76, 0.12);
+            border-color: var(--gold);
+        }
+
+        .social-link--muted {
+            opacity: 0.32;
+            cursor: default;
+        }
+
+        .btn-form {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(66, 133, 244, 0.12);
+            border-color: rgba(66, 133, 244, 0.45);
+            color: #a8c7fa;
+        }
+
+        .btn-form:hover {
+            background: rgba(66, 133, 244, 0.22);
+            border-color: #8ab4f8;
+            color: #d2e3fc;
+        }
+
+        .btn-form-icon {
+            display: inline-flex;
+            width: 20px;
+            height: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-form-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .catalog-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-wrap {
+            flex: 1;
+            min-width: min(100%, 260px);
+        }
+
+        .search-wrap label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 8px;
+        }
+
+        .search-wrap input {
+            width: 100%;
+            font-family: 'IM Fell English', serif;
+            font-size: 1rem;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+        }
+
+        .search-wrap input::placeholder {
+            color: var(--ink-faint);
+        }
+
+        .search-wrap input:focus {
+            outline: 2px solid var(--gold-dim);
+            outline-offset: 2px;
+        }
+
+        .toolbar-jump {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            text-decoration: none;
+            white-space: nowrap;
+            padding: 10px 0;
+            border-bottom: 1px solid transparent;
+        }
+
+        .toolbar-jump:hover {
+            border-bottom-color: var(--gold-dim);
+        }
+
+        .search-empty {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--ink-faint);
+            text-align: center;
+            padding: 24px 12px;
+            border: 1px dashed var(--border);
+            margin-bottom: 20px;
+        }
+
+        .search-empty[hidden] {
+            display: none !important;
+        }
+
+        .entry-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            border: 1px solid var(--border);
+            color: var(--ink-faint);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            padding: 3px 10px;
+        }
+
+        .entry-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding-top: 4px;
+            border-top: 1px solid rgba(210, 170, 100, 0.1);
+        }
+
+        .entry-toolbar-left,
+        .entry-toolbar-right {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .like-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--ink-muted);
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .like-btn:hover {
+            border-color: var(--gold-dim);
+            color: var(--gold-pale);
+        }
+
+        .like-btn[aria-pressed="true"] {
+            border-color: var(--gold-dim);
+            color: var(--gold);
+        }
+
+        .like-btn:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        .btn-ghost {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--ink-faint);
+            border-bottom: 1px solid transparent;
+            padding: 6px 0;
+            border: none;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-ghost:hover {
+            color: var(--gold);
+            border-bottom-color: var(--gold-dim);
+        }
+
+        .entry-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gold);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 1px solid var(--gold-dim);
+            padding: 9px 22px;
+            transition: all 0.25s;
+        }
+
+        .entry-cta:hover {
+            background: var(--gold);
+            color: var(--bg);
+            border-color: var(--gold);
+        }
+
+        .entry-cta::after {
+            content: '→';
+            transition: transform 0.2s;
+        }
+
+        .entry-cta--open::after {
+            content: '↗';
+        }
+
+        .entry-cta--download::after {
+            content: '↓';
+        }
+
+        .entry-cta:hover::after {
+            transform: translateX(4px);
+        }
+
+        .entry-cta--download:hover::after {
+            transform: translateY(2px);
+        }
+
+        span.entry-cta {
+            cursor: not-allowed;
+        }
+
+        .entry-card.pending {
+            background: var(--card-pending);
+            border-style: dashed;
+            cursor: default;
+        }
+
+        .entry-card.pending .entry-body {
+            color: #8a8580;
+        }
+
+        .entry-card.pending .entry-title {
+            color: var(--ink-muted);
+        }
+
+        .entry-card.pending .tag {
+            color: #8a8580;
+            border-color: rgba(210, 170, 100, 0.12);
+        }
+
+        .entry-card.pending .entry-cta {
+            opacity: 0.55;
+            pointer-events: none;
+            border-color: var(--ink-faint);
+            color: var(--ink-faint);
+        }
+
+        .entry-card.pending .entry-cta::after {
+            content: none;
+        }
+
+        .placeholder-card {
+            border: 1px dashed var(--ink-faint);
+            padding: 40px;
+            text-align: center;
+            color: var(--ink-placeholder);
+            font-family: 'IM Fell English', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        .placeholder-card .placeholder-symbol {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 12px;
+            opacity: 0.45;
+            font-family: 'Playfair Display', serif;
+            color: var(--ink-placeholder);
+        }
+
+        footer {
+            margin-top: 80px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        footer .footer-left {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            line-height: 1.8;
+            color: var(--ink-faint);
+        }
+
+        footer .footer-left strong {
+            color: var(--gold-dim);
+            font-weight: 400;
+        }
+
+        footer .footer-right {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--ink-faint);
+        }
+
+        footer .footer-left a {
+            color: var(--gold-dim);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+
+        footer .footer-left a:hover {
+            color: var(--gold);
+            border-bottom-color: var(--gold-dim);
+        }
+
+        .footer-privacy {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 0.82rem;
+            color: var(--ink-faint);
+            margin-top: 10px;
+            max-width: 36rem;
+            line-height: 1.55;
+        }
+
+        .footer-privacy[hidden] {
+            display: none !important;
+        }
+
+        .discussion-slot {
+            margin-top: 56px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        .discussion-slot[hidden] {
+            display: none !important;
+        }
+
+        .discussion-label {
+            margin-bottom: 16px;
+        }
+
+        .utterances-frame {
+            min-height: 120px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(12px);
+            z-index: 50;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            color: var(--bg);
+            background: var(--gold-pale);
+            padding: 12px 20px;
+            border: 1px solid var(--gold);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            max-width: min(480px, 92vw);
+            text-align: center;
+            line-height: 1.45;
+        }
+
+        .toast.toast--on {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .noscript-banner {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--ink-muted);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 28px;
+            text-align: center;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            animation: fadeUp 0.6s ease both;
+        }
+
+        .connect-panel,
+        .entry-card,
+        .placeholder-card,
+        .discussion-slot {
+            animation: fadeUp 0.5s ease both;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ink-faint);
+            border-radius: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            header,
+            .connect-panel,
+            .entry-card,
+            .placeholder-card,
+            .discussion-slot {
+                animation: none;
+            }
+
+            .entry-card,
+            .entry-cta,
+            .btn,
+            .like-btn,
+            .social-link {
+                transition: none;
+            }
+
+            .entry-cta:hover::after {
+                transform: none;
+            }
+
+            .toast {
+                transition: none;
+            }
+
+            .toast.toast--on {
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 560px) {
+            .wrapper {
+                padding: 0 18px 80px;
+            }
+
+            header {
+                padding: 50px 0 36px;
+            }
+
+            .entry-card {
+                padding: 28px 22px 24px;
+            }
+
+            .connect-panel {
+                padding: 22px 20px 24px;
+            }
+
+            footer {
+                flex-direction: column;
+            }
+
+            .entry-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .entry-toolbar-right {
+                width: 100%;
+            }
+
+            .entry-cta {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+    <!-- MathJax configuration and loader -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                typeset: false
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+    <script type="application/json" id="site-data-embedded">
+{
+  "_whereToPutThings": {
+    "socialIcons": "site.connect.social — add an object with network (youtube, github, instagram, …), href, and label. Networks not listed here will not appear. Unknown networks get a generic link icon.",
+    "googleForm": "site.connect.googleForm.href — your Google Form URL for anonymous feedback. Leave \"\" until ready.",
+    "extraTextButtons": "site.connect.links — optional public links only (e.g. Ko-fi, Buy Me a Coffee, newsletter). Never put private phone numbers here.",
+    "feedbackButton": "site.connect.feedback.href — GitHub issue template for this site (should open issues on THIS repo).",
+    "footerRepoLine": "site.footer.repoUrl and site.footer.repoLabel",
+    "publicByline": "site.byline — keep to what you are comfortable publishing (name only is fine).",
+    "heroImages": "site.images.logoUrl and/or site.images.portraitUrl — relative paths such as assets/logo.png. If the GitHub repo is public, those files are public too; use an abstract logo if you prefer not to show a face.",
+    "trafficAnalytics": "site.analytics — set plausibleDomain and/or googleMeasurementId when you accept the privacy trade-offs; leave empty to send nothing.",
+    "manuscriptSearch": "The search field is in index.html (id manuscript-search). It filters entries by title, body, tags, PDF filename, and id — no server required.",
+    "listUi": "site.listUi.bodyCharsBeforeToggle and maxEntriesBeforeShowAll — read more / view all thresholds."
+  },
+  "_howToAddChapter": "Append to entries. Push. On GitHub Pages, site.json is fetched automatically. After local edits to site.json, run: node inject-site-embedded.cjs. PDF clicks are not tracked unless you enable analytics.",
+  "site": {
+    "baseUrl": "https://eric-asaah.github.io/math-memoirs/",
+    "documentTitle": "Mathematical Memoirs — Eric Asaah",
+    "metaDescription": "Notes written for readers who enjoy exploratory mathematics.",
+    "ogImage": "",
+    "byline": "Eric Asaah",
+    "ruleLabel": "A Working Notebook",
+    "heading": {
+      "line1": "Mathematical",
+      "line2Italic": "Memoirs"
+    },
+    "subtitle": "Notes written for readers who enjoy exploratory mathematics.",
+    "projectLabel": "Project I",
+    "images": {
+      "logoUrl": "assets/logo.png",
+      "portraitUrl": "assets/headshot.png",
+      "portraitAlt": "Eric Asaah"
+    },
+    "analytics": {
+      "plausibleDomain": "",
+      "googleMeasurementId": ""
+    },
+    "discussion": {
+      "enabled": false,
+      "type": "utterances",
+      "repo": "Eric-Asaah/math-memoirs",
+      "issueTerm": "pathname",
+      "theme": "preferred-color-scheme"
+    },
+    "footer": {
+      "repo": "https://github.com/Eric-Asaah/math-memoirs",
+      "maintainer": "Eric Asaah",
+      "license": "CC BY-NC-ND 4.0",
+      "privacyNote": "Likes are stored only in your browser. No analytics are loaded. You can send me direct feedback if you want to."
+    },
+    "listUi": {
+      "bodyCharsBeforeToggle": 200,
+      "maxEntriesBeforeShowAll": 3
+    },
+    "connect": {
+      "heading": "Public channels & feedback",
+      "intro": "Use GitHub or the Google Form for feedback. If you use the form, please include your email if you want a response.",
+      "googleForm": {
+        "label": "Anonymous feedback (Google Form)",
+        "href": ""
+      },
+      "social": [
+        {
+          "network": "github",
+          "href": "https://github.com/Eric-Asaah/math-memoirs",
+          "label": "GitHub repository"
+        },
+        {
+          "network": "youtube",
+          "href": "https://www.youtube.com/@Emaphy",
+          "label": "YouTube channel"
+        },
+        {
+          "network": "instagram",
+          "href": "",
+          "label": "Instagram"
+        },
+        {
+          "network": "facebook",
+          "href": "",
+          "label": "Facebook"
+        },
+        {
+          "network": "linkedin",
+          "href": "",
+          "label": "LinkedIn"
+        },
+        {
+          "network": "x",
+          "href": "",
+          "label": "X (Twitter)"
+        },
+        {
+          "network": "tiktok",
+          "href": "",
+          "label": "TikTok"
+        },
+        {
+          "network": "whatsapp",
+          "href": "",
+          "label": "WhatsApp channel"
+        },
+        {
+          "network": "discord",
+          "href": "",
+          "label": "Discord"
+        },
+        {
+          "network": "email",
+          "href": "",
+          "label": "Email"
+        },
+        {
+          "network": "skool",
+          "href": "",
+          "label": "Skool community"
+        }
+      ],
+      "links": [],
+      "feedback": {
+        "label": "GitHub issue",
+        "href": "https://github.com/Eric-Asaah/math-memoirs/issues/new?labels=feedback&title=Mathematical%20Memoirs%20feedback"
+      }
+    },
+    "placeholder": {
+      "symbol": "∴",
+      "text": "Further entries in preparation. New discoveries will appear here as they are written up and verified."
+    }
+  },
+  "entries": [
+    {
+      "id": "transversal-invariant",
+      "title": "The Transversal Invariant",
+      "body": "I got the question wrong the first time.  The SAT asked: “A transversal cuts two parallel lines … which of these sums could **not** equal four of the angles?”  The textbook expects you to list all five cases, but I was lazy and started looking for a way out.\n\nWhat fell out of a Desmos accident was a single, fixed point that every possible sum line must pass through.  Once you have that point, you can test all four answer choices instantly:\n\n$$x_p = \\frac{90 - t}{k}, \\qquad y_p = 90n$$\n\nPlug $x_p$ into each candidate expression.  The one that doesn’t give $90n$ is impossible.  No casework, no sign‑tracking, no “is it $a$ or $b$?”\n\nThe full manuscript follows the discovery from the first mistake to the proof, including the failed attempts and the intermediate machinery that almost worked but didn’t.\n\nIf you only take one thing from this: every transversal‑angle sum problem has a single pivot point.  Find it once, and the test does the rest.",
+      "tags": [
+        "Euclidean Geometry",
+        "Angle Relations",
+        "SAT",
+        "Parallel Lines",
+        "Angle sum",
+        "Invariant",
+        "Shortcut"
+      ],
+      "datetime": "2026-05-11",
+      "status": "verified",
+      "pdf": "manuscripts/Math_memoir_entry_1.pdf",
+      "manuscriptLabel": "Open manuscript"
+    },
+    {
+      "id": "exponential-ratio-invariant",
+      "title": "The Exponential Ratio Invariant",
+      "body": "I kept seeing the same question: “$f(x)=a\\cdot b^{cx}$ … $f(m)$ is $p\\%$ greater/less than $f(n)$.”  The textbook method is to compute both function values, subtract, divide, and convert.  But the initial value $a$ appears in both numbers and cancels.\n\nThat means the percent change depends only on the base, the coefficient, and how far apart the exponents are.  The formula that emerges is:\n\n$$p = 100\\,\\bigl|\\, b^{\\,c(m-n)} - 1 \\,\\bigr|$$\n\nNo sign analysis, no “growth versus decay” decision.  The absolute value handles everything, and the word “than” in the question always tells you which exponent is the denominator.\n\nThe manuscript walks through the “Than Denominator Rule”, the master multiplier $M = b^{c(m-n)}$, and five SAT‑style drills that work forward, backward, with fractional exponents, and with decay — all solved in one line each.",
+      "tags": [
+        "Exponential Functions",
+        "Percent Change",
+        "SAT Algebra",
+        "Growth and Decay",
+        "Absolute Ratio",
+        "Shortcut"
+      ],
+      "datetime": "2026-05-12",
+      "status": "verified",
+      "pdf": "manuscripts/Math_memoir_entry_2.pdf",
+      "manuscriptLabel": "Open manuscript"
+    },
+    {
+      "id": "five-in-one",
+      "title": "A Unified Five-in-One Proof",
+      "body": "I noticed something strange: the five angle relationships that parallel lines give us (alternate, corresponding, co‑interior, vertically opposite, adjacent supplementary) all feel like different statements, but under the hood they come from the same algebraic identity.\n\nWhat if you only had to remember one thing — and the rest are just its reflections?\n\nThe idea is that all five reduce to a single invariant equation:\n\n$$\\angle_1 + \\angle_2 = 180^\\circ$$\n\nwhen you label the diagram correctly and follow the transversal.  The manuscript (still in preparation) will show how the invariant reproduces each theorem without separate memorisation.\n\nIf I’m right, this turns a list of five into one.  If I’m wrong, I’ll post the messy attempt anyway — that’s how most of these shortcuts start.",
+      "tags": [
+        "Parallel Lines",
+        "Unification",
+        "Pending verification"
+      ],
+      "status": "pending",
+      "lockedLabel": "Locked"
+    }
+  ]
+}
+    </script>
+
+    <noscript>
+        <div class="noscript-banner">This catalog needs JavaScript. With JavaScript off, open <strong>site.json</strong>
+            in an editor to read titles and PDF paths.</div>
+    </noscript>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <div class="wrapper">
+
+        <header>
+            <p class="site-label" id="site-label">Eric Asaah</p>
+            <div id="header-visual" class="header-visual">
+                <div id="portrait-slot" class="portrait-slot portrait-slot--placeholder" role="img"
+                    aria-label="Optional site logo or portrait">
+                    <img id="portrait-img" class="portrait-slot__img" width="120" height="120" hidden alt=""
+                        decoding="async" loading="lazy" />
+                    <span id="portrait-slot-label" class="portrait-slot-label">Logo or portrait — add a file under
+                        assets/ then set site.images.portraitUrl or logoUrl in site.json</span>
+                </div>
+            </div>
+            <div class="header-rule"><span id="header-rule-label">Mathematical Record</span></div>
+            <h1 id="hero-title"><span>Mathematical</span><br><em>Memoirs</em></h1>
+            <p class="subtitle" id="subtitle">Notes written for readers who enjoy exploratory mathematics.</p>
+            <div class="header-meta">
+                <span><b>Project</b> <span id="project-label">Project I</span></span>
+                <span><b>Entries</b> <span id="verified-count">0</span> completed · <span id="pending-count">0</span>
+                    pending</span>
+            </div>
+        </header>
+
+        <div class="divider">
+            <span class="divider-glyph">❧</span>
+        </div>
+
+        <div id="load-error" class="load-error" hidden></div>
+
+        <div class="catalog-toolbar">
+            <div class="search-wrap">
+                <label for="manuscript-search">Search manuscripts</label>
+                <input type="search" id="manuscript-search" name="q" placeholder="Title, tag, keyword, or entry number…"
+                    autocomplete="off" spellcheck="false" />
+            </div>
+            <a class="toolbar-jump" href="#connect-panel">Contact &amp; feedback ↓</a>
+        </div>
+
+        <div id="entries-root">
+            <p id="entries-loading" class="entries-loading">Loading catalog…</p>
+        </div>
+
+        <section id="discussion-slot" class="discussion-slot" hidden aria-label="Optional public comments"></section>
+
+        <section id="connect-panel" class="connect-panel" hidden aria-label="Contact and feedback"></section>
+
+        <footer>
+            <div class="footer-left">
+                <strong id="footer-author">Eric Asaah</strong><br>
+                Maintained © <span id="copyright-year"></span><br>
+                <span id="footer-license">Released under CC BY-NC-ND 4.0.</span>
+                <p id="footer-privacy" class="footer-privacy" hidden></p>
+            </div>
+            <div class="footer-right" id="footer-tagline">Just a boy with Interest &amp; Curiosity</div>
+        </footer>
+    </div>
+
+    <script src="app.js" defer></script>
+</body>
+
+</html>
