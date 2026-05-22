@@ -1,0 +1,19 @@
+title: Mathematical Memoirs
+description: Exploratory math notes for curious readers
+author: Eric Asaah
+url: "https://eric-asaah.github.io"
+baseurl: "/math-memoirs"
+
+# Build settings
+theme: jekyll-theme-minimal
+markdown: kramdown
+
+# Collections (if you use entries)
+collections:
+  entries:
+    output: true
+    permalink: /entries/:path/
+
+# Exclude from build
+exclude:
+  - README.md
