@@ -75,8 +75,8 @@
   "entry": {
     "noteLabel": "Note on this entry",
     "manuscriptLabel": "Open manuscript",
-    "statusVerified": "Verified",
-    "statusPending": "Pending"
+    "statusVerified": "Completed",
+    "statusPending": "In progress"
   },
 
   "feedback": {
@@ -117,39 +117,9 @@
         "Shortcut"
       ],
       "datetime": "2026-05-11",
-      "status": "verified",
+      "status": "Completed",
       "pdf": "manuscripts/Math_memoir_entry_1.pdf",
       "manuscriptLabel": "Open manuscript"
-    },
-    {
-      "id": "exponential-ratio-invariant",
-      "title": "The Exponential Ratio Invariant",
-      "body": "I kept seeing the same question: \"$f(x)=a\\cdot b^{cx}$ … $f(m)$ is $p\\%$ greater/less than $f(n)$.\"  The textbook method is to compute both function values, subtract, divide, and convert.  But the initial value $a$ appears in both numbers and cancels.\n\nThat means the percent change depends only on the base, the coefficient, and how far apart the exponents are.  The formula that emerges is:\n\n$$p = 100\\,\\bigl|\\, b^{\\,c(m-n)} - 1 \\,\\bigr|$$\n\nNo sign analysis, no \"growth versus decay\" decision.  The absolute value handles everything, and the word \"than\" in the question always tells you which exponent is the denominator.\n\nThe manuscript walks through the \"Than Denominator Rule\", the master multiplier $M = b^{c(m-n)}$, and five SAT‑style drills that work forward, backward, with fractional exponents, and with decay — all solved in one line each.",
-      "tags": [
-        "Exponential Functions",
-        "Percent Change",
-        "SAT Algebra",
-        "Growth and Decay",
-        "Absolute Ratio",
-        "Shortcut"
-      ],
-      "datetime": "2026-05-12",
-      "status": "verified",
-      "pdf": "manuscripts/Math_memoir_entry_2.pdf",
-      "manuscriptLabel": "Open manuscript"
-    },
-    {
-      "id": "five-in-one",
-      "title": "A Unified Five-in-One Proof",
-      "body": "I noticed something strange: the five angle relationships that parallel lines give us (alternate, corresponding, co‑interior, vertically opposite, adjacent supplementary) all feel like different statements, but under the hood they come from the same algebraic identity.\n\nWhat if you only had to remember one thing — and the rest are just its reflections?\n\nThe idea is that all five reduce to a single invariant equation:\n\n$$\\angle_1 + \\angle_2 = 180^\\circ$$\n\nwhen you label the diagram correctly and follow the transversal.  The manuscript (still in preparation) will show how the invariant reproduces each theorem without separate memorisation.\n\nIf I'm right, this turns a list of five into one.  If I'm wrong, I'll post the messy attempt anyway — that's how most of these shortcuts start.",
-      "tags": [
-        "Parallel Lines",
-        "Unification",
-        "Pending verification"
-      ],
-      "datetime": "2026-05-13",
-      "status": "pending",
-      "lockedLabel": "Locked"
     },
     {
       "id": "absolute-value-invariant-explorations",
@@ -162,7 +132,7 @@
         "Nonlinear"
       ],
       "datetime": "2026-05-14",
-      "status": "pending",
+      "status": "In progress",
       "lockedLabel": "Locked"
     }
   ]
