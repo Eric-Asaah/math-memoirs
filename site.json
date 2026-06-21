@@ -7,21 +7,69 @@
     "documentTitle": "Mathematical Memoirs — Eric Asaah",
     "metaDescription": "A public online mathematics notebook: discoveries, mistakes, and open questions.",
     "ogImage": "https://eric-asaah.github.io/math-memoirs/assets/og-image.png",
-    "byline": "Eric Asaah"
-  },
-
-  "cover": {
-    "tagline": "A public notebook of discoveries, false starts, and open questions — recorded as they emerge.",
-    "subtitle": "A Working Notebook",
-    "subtitle2": "Exploratory mathematics, one discovery at a time.",
-    "latestLabel": "Latest:"
-  },
-
-  "notebook": {
-    "title": "Mathematical Memoirs",
-    "subtitle": "A Working Notebook — entries in progress and completed",
-    "searchLabel": "Search entries",
-    "searchPlaceholder": "Title, tag, keyword, or entry number…"
+    "byline": "Eric Asaah",
+    "ruleLabel": "A Working Notebook",
+    "heading": {
+      "line1": "Mathematical",
+      "line2Italic": "Memoirs"
+    },
+    "subtitle": "Notes written for readers who enjoy exploratory mathematics.",
+    "projectLabel": "Project I",
+    "images": {
+      "logoUrl": "assets/logo.png",
+      "portraitUrl": "assets/headshot.png",
+      "portraitAlt": "Eric Asaah"
+    },
+    "analytics": {
+      "plausibleDomain": "",
+      "googleMeasurementId": ""
+    },
+    "discussion": {
+      "enabled": false,
+      "type": "utterances",
+      "repo": "Eric-Asaah/math-memoirs",
+      "issueTerm": "pathname",
+      "theme": "preferred-color-scheme"
+    },
+    "footer": {
+      "repo": "https://github.com/Eric-Asaah/math-memoirs",
+      "author": "Eric Asaah",
+      "license": "CC BY-NC-ND 4.0",
+      "privacyNote": "Likes are stored only in your browser. No analytics are loaded.",
+      "tagline": "Just a boy with Interest & Curiosity"
+    },
+    "listUi": {
+      "bodyCharsBeforeToggle": 200,
+      "maxEntriesBeforeShowAll": 3
+    },
+    "connect": {
+      "heading": "Public channels & feedback",
+      "intro": "Use GitHub or the Google Form for feedback. If you use the form, please include your email if you want a response.",
+      "googleForm": {
+        "label": "Anonymous feedback (Google Form)",
+        "href": ""
+      },
+      "social": [
+        {
+          "network": "github",
+          "href": "https://github.com/Eric-Asaah/math-memoirs",
+          "label": "GitHub repository"
+        },
+        {
+          "network": "youtube",
+          "href": "https://www.youtube.com/@Emaphy",
+          "label": "YouTube channel"
+        }
+      ],
+      "feedback": {
+        "label": "GitHub issue",
+        "href": "https://github.com/Eric-Asaah/math-memoirs/issues/new?labels=feedback&title=Mathematical%20Memoirs%20feedback"
+      }
+    },
+    "placeholder": {
+      "symbol": "∴",
+      "text": "Further entries in preparation. New discoveries will appear here as they are written up and verified."
+    }
   },
 
   "entry": {
@@ -32,74 +80,14 @@
   },
 
   "feedback": {
-    "intro": "This notebook is a living document. I often miss things, take wrong turns, or overlook a deeper pattern. If you spot something — a mistake, a missing connection, or just a question — I want to hear it.",
-    "dividerText": "or use the form below",
-    "inProgressNote": "💡 For entries still in progress: Your feedback is especially valuable there — I'm often stuck or unsure, and a fresh pair of eyes can unlock something I missed.",
-    "channels": [
-      {
-        "id": "github-issue",
-        "emoji": "🐙",
-        "label": "GitHub Issue",
-        "href": "https://github.com/Eric-Asaah/math-memoirs/issues/new?labels=feedback&title=Mathematical%20Memoirs%20feedback"
-      },
-      {
-        "id": "youtube",
-        "emoji": "💬",
-        "label": "YouTube",
-        "href": "https://www.youtube.com/@Emaphy"
-      },
-      {
-        "id": "email",
-        "emoji": "✉️",
-        "label": "Email",
-        "href": "mailto:ericasaah1010@gmail.com?subject=Mathematical%20Memoirs%20Feedback"
-      },
-      {
-        "id": "github-repo",
-        "emoji": "📂",
-        "label": "GitHub Repo",
-        "href": "https://github.com/Eric-Asaah/math-memoirs"
-      }
-    ],
-    "formSrc": "https://docs.google.com/forms/d/e/1FAIpQLScNHukNHzTjuiFGVw-fguN1ZwPdzi8wawpLyL6W61QhKkKHcg/viewform?embedded=true"
+    "baseUrl": "feedback.html"
   },
 
-  "navigation": {
-    "backToCover": "← Back to Cover",
-    "backToNotebook": "← Back to the Notebook"
-  },
-
-  "footer": {
-    "repo": "https://github.com/Eric-Asaah/math-memoirs",
-    "author": "Eric Asaah",
-    "license": "CC BY-NC-ND 4.0",
-    "privacyNote": "Likes are stored only in your browser. No analytics are loaded.",
-    "tagline": "Just a boy with Interest & Curiosity"
-  },
-
-  "connect": {
-    "heading": "Public channels & feedback",
-    "intro": "Use GitHub or the Google Form for feedback. If you use the form, please include your email if you want a response.",
-    "googleForm": {
-      "label": "Anonymous feedback (Google Form)",
-      "href": ""
-    },
-    "social": [
-      {
-        "network": "github",
-        "href": "https://github.com/Eric-Asaah/math-memoirs",
-        "label": "GitHub repository"
-      },
-      {
-        "network": "youtube",
-        "href": "https://www.youtube.com/@Emaphy",
-        "label": "YouTube channel"
-      }
-    ],
-    "feedback": {
-      "label": "GitHub issue",
-      "href": "https://github.com/Eric-Asaah/math-memoirs/issues/new?labels=feedback&title=Mathematical%20Memoirs%20feedback"
-    }
+  "notebook": {
+    "title": "Mathematical Memoirs",
+    "subtitle": "A Working Notebook — entries in progress and completed",
+    "searchLabel": "Search entries",
+    "searchPlaceholder": "Title, tag, keyword, or entry number…"
   },
 
   "entries": [
@@ -167,8 +155,15 @@
     }
   ],
 
-  "placeholder": {
-    "symbol": "∴",
-    "text": "Further entries in preparation. New discoveries will appear here as they are written up and verified."
+  "cover": {
+    "tagline": "A public notebook of discoveries, false starts, and open questions — recorded as they emerge.",
+    "subtitle": "A Working Notebook",
+    "subtitle2": "Exploratory mathematics, one discovery at a time.",
+    "latestLabel": "Latest:"
+  },
+
+  "navigation": {
+    "backToCover": "← Back to Cover",
+    "backToNotebook": "← Back to the Notebook"
   }
 }
