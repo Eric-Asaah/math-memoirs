@@ -201,7 +201,6 @@
     if (label) label.hidden = true;
   }
 
-  // --- NEW: Render Cover ---
   function renderCover(site) {
     var cover = site.cover || {};
     var tagline = document.querySelector('.tagline');
@@ -214,7 +213,6 @@
     if (subtitle) subtitle.textContent = cover.subtitle || 'A Working Notebook';
     if (subtitle2) subtitle2.textContent = cover.subtitle2 || 'Exploratory mathematics, one discovery at a time.';
     
-    // Set latest entry label (the link will be set after entries are loaded)
     if (latestLabel) {
       latestLabel.textContent = cover.latestLabel || 'Latest:';
     }
@@ -383,12 +381,13 @@
   }
 
   function renderEntryCard(entry, globalIndex, site, likes) {
-    var pending = entry.status === 'pending';
+    // Determine if entry is completed based on status field
+    var isCompleted = entry.status === 'completed' || entry.status === 'verified' || entry.status === 'Completed';
+    var pending = !isCompleted;
 
     // Get labels from JSON
     var entryCfg = site.entry || {};
-    var statusVerified = entryCfg.statusVerified || 'Verified';
-    var statusPending = entryCfg.statusPending || 'Pending';
+    var statusLabel = isCompleted ? (entryCfg.statusVerified || 'Completed') : (entryCfg.statusPending || 'In progress');
     var noteLabel = entryCfg.noteLabel || 'Note on this entry';
     var manuscriptLabel = entry.manuscriptLabel || entryCfg.manuscriptLabel || 'Open manuscript';
 
@@ -398,7 +397,7 @@
 
     var stamp = document.createElement('div');
     stamp.className = 'entry-stamp' + (pending ? ' pending' : '');
-    stamp.textContent = pending ? '⧗ ' + statusPending : '✓ ' + statusVerified;
+    stamp.textContent = pending ? '⧗ ' + statusLabel : '✓ ' + statusLabel;
     card.appendChild(stamp);
 
     var head = document.createElement('div');
@@ -613,18 +612,23 @@
 
     var list = Array.isArray(entries) ? entries.slice() : [];
 
-    var verified = [];
-    var pending = [];
+    var completed = [];
+    var inProgress = [];
     list.forEach(function (e, i) {
       e._i = i;
-      if (e.status === 'pending') pending.push(e);
-      else verified.push(e);
+      // Check if entry is completed (status === 'completed', 'verified', or 'Completed')
+      var isCompleted = e.status === 'completed' || e.status === 'verified' || e.status === 'Completed';
+      if (isCompleted) {
+        completed.push(e);
+      } else {
+        inProgress.push(e);
+      }
     });
 
     var vc = document.getElementById('verified-count');
     var pc = document.getElementById('pending-count');
-    if (vc) vc.textContent = String(verified.length);
-    if (pc) pc.textContent = String(pending.length);
+    if (vc) vc.textContent = String(completed.length);
+    if (pc) pc.textContent = String(inProgress.length);
 
     var likes = readLikes();
     var lu = site.listUi || {};
@@ -666,8 +670,8 @@
       }
     }
 
-    section('Completed', verified);
-    section('In progress', pending);
+    section('Completed', completed);
+    section('In progress', inProgress);
 
     var ph = site.placeholder;
     if (ph) {
@@ -686,6 +690,25 @@
     wireManuscriptSearch();
   }
 
+  // --- Notebook header ---
+  function renderNotebookHeader(site) {
+    var n = site.notebook || {};
+    var titleEl = document.getElementById('notebook-title');
+    var subheadEl = document.getElementById('notebook-subhead');
+    var searchLabel = document.getElementById('search-label');
+    var searchInput = document.getElementById('manuscript-search');
+    var backBtn = document.getElementById('back-to-cover');
+
+    if (titleEl && n.title) titleEl.textContent = n.title;
+    if (subheadEl && n.subtitle) subheadEl.textContent = n.subtitle;
+    if (searchLabel && n.searchLabel) searchLabel.textContent = n.searchLabel;
+    if (searchInput && n.searchPlaceholder) searchInput.placeholder = n.searchPlaceholder;
+    
+    // Back button
+    var nav = site.navigation || {};
+    if (backBtn && nav.backToCover) backBtn.textContent = nav.backToCover;
+  }
+
   function showLoadError(err) {
     var el = document.getElementById('load-error');
     if (!el) return;
@@ -694,7 +717,7 @@
     var detail = escapeHtml(err && err.message ? err.message : 'Unknown error');
     var fileHint =
       '<p><strong>You opened this page from disk</strong> (<code>file://</code>). Browsers block <code>fetch</code> for neighboring files even when the path is correct, so <code>site.json</code> cannot load that way unless a fallback is present.</p>' +
-      '<p><strong>Ways to preview:</strong> (1) Publish with <strong>GitHub Pages</strong> and open the <code>https://…</code> URL. (2) From this folder run <code>npx --yes serve .</code> and use the local <code>http://localhost…</code> link. (3) After editing <code>site.json</code>, run <code>node inject-site-embedded.cjs</code> so the latest data is embedded in <code>index.html</code> for offline double‑click.</p>';
+      '<p><strong>Ways to preview:</strong> (1) Publish with <strong>GitHub Pages</strong> and open the <code>https://…</code> URL. (2) From this folder run <code>npx --yes serve .</code> and use the local <code>http://localhost…</code> link.</p>';
     var httpHint =
       '<p>Confirm <code>site.json</code> is in the same folder as <code>index.html</code> on your server and that the server returns it with a 200 status.</p>';
     el.innerHTML =
@@ -772,6 +795,7 @@
         renderHeader(site);
         renderHeaderMedia(site);
         renderCover(site);
+        renderNotebookHeader(site);
         renderEntries(entries, site);
         renderDiscussion(site);
         renderConnect(site);
