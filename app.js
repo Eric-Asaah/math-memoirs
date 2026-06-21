@@ -4,7 +4,7 @@
   var STORAGE_LIKES = 'memoir-likes-v1';
   var CONFIG_URL = new URL('site.json', window.location.href).href;
 
-  /** Major platforms (fixed SVG markup). Add `href` in site.json to activate. */
+  // --- Major platforms (fixed SVG markup). Add `href` in site.json to activate. ---
   function socialIconMarkup(network) {
     var n = String(network || 'generic').toLowerCase();
     if (n === 'twitter') n = 'x';
@@ -36,47 +36,9 @@
     return svgs[n] || svgs.generic;
   }
 
-  var DEFAULT_SOCIAL_ORDER = [
-    { network: 'github', label: 'GitHub' },
-    { network: 'youtube', label: 'YouTube' },
-    { network: 'instagram', label: 'Instagram' },
-    { network: 'tiktok', label: 'TikTok' },
-    { network: 'x', label: 'X' },
-    { network: 'linkedin', label: 'LinkedIn' },
-    { network: 'facebook', label: 'Facebook' },
-    { network: 'discord', label: 'Discord' },
-    { network: 'whatsapp', label: 'WhatsApp' },
-    { network: 'email', label: 'Email' }
-  ];
-
-  function pdfBasename(path) {
-    if (!path) return 'manuscript.pdf';
-    var s = String(path).replace(/\\/g, '/').split('/');
-    return s[s.length - 1] || 'manuscript.pdf';
-  }
-
-  function loadSiteData() {
-    return fetch(CONFIG_URL, { cache: 'no-store' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .catch(function (firstErr) {
-        var el = document.getElementById('site-data-embedded');
-        if (el && el.textContent.trim()) {
-          try {
-            return JSON.parse(el.textContent);
-          } catch (parseErr) {
-            throw firstErr;
-          }
-        }
-        throw firstErr;
-      });
-  }
-
-  function $(sel, root) {
-    return (root || document).querySelector(sel);
-  }
+  // --- Utilities ---
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return (root || document).querySelectorAll(sel); }
 
   function escapeHtml(s) {
     if (s == null) return '';
@@ -95,10 +57,15 @@
     return d.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  function getYear() {
-    return String(new Date().getFullYear());
+  function getYear() { return String(new Date().getFullYear()); }
+
+  function pdfBasename(path) {
+    if (!path) return 'manuscript.pdf';
+    var s = String(path).replace(/\\/g, '/').split('/');
+    return s[s.length - 1] || 'manuscript.pdf';
   }
 
+  // --- Meta helpers ---
   function setMeta(nameOrProp, value, isProperty) {
     if (!value) return;
     var sel = isProperty ? 'meta[property="' + nameOrProp + '"]' : 'meta[name="' + nameOrProp + '"]';
@@ -112,54 +79,11 @@
     el.setAttribute('content', value);
   }
 
-  function applyHead(site) {
-    if (site.documentTitle) document.title = site.documentTitle;
-    if (site.metaDescription) {
-      setMeta('description', site.metaDescription, false);
-      setMeta('og:description', site.metaDescription, true);
-      setMeta('twitter:description', site.metaDescription, true);
-    }
-    if (site.documentTitle) {
-      setMeta('og:title', site.documentTitle, true);
-      setMeta('twitter:title', site.documentTitle, true);
-    }
-    setMeta('twitter:card', 'summary', true);
-    setMeta('og:type', 'website', true);
-
-    var base = site.baseUrl && String(site.baseUrl).trim();
-    var canonicalHref = base || window.location.href.split('#')[0];
-    try {
-      canonicalHref = new URL(base || window.location.href).href;
-    } catch (e) {
-      canonicalHref = window.location.href.split('#')[0];
-    }
-    var link = document.getElementById('canonical-link');
-    if (link) link.setAttribute('href', canonicalHref);
-    setMeta('og:url', canonicalHref, true);
-
-    if (site.ogImage && String(site.ogImage).trim()) {
-      setMeta('og:image', site.ogImage, true);
-      setMeta('twitter:image', site.ogImage, true);
-    }
-  }
-
+  // --- Likes ---
   function readLikes() {
-    try {
-      var raw = localStorage.getItem(STORAGE_LIKES);
-      var o = raw ? JSON.parse(raw) : {};
-      return o && typeof o === 'object' ? o : {};
-    } catch (e) {
-      return {};
-    }
+    try { var raw = localStorage.getItem(STORAGE_LIKES); var o = raw ? JSON.parse(raw) : {}; return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; }
   }
-
-  function writeLikes(map) {
-    try {
-      localStorage.setItem(STORAGE_LIKES, JSON.stringify(map));
-    } catch (e) {
-      /* ignore quota */
-    }
-  }
+  function writeLikes(map) { try { localStorage.setItem(STORAGE_LIKES, JSON.stringify(map)); } catch (e) { /* ignore quota */ } }
 
   function showToast(msg, durationMs) {
     var t = document.getElementById('toast');
@@ -169,51 +93,80 @@
     t.classList.add('toast--on');
     clearTimeout(showToast._tid);
     var ms = typeof durationMs === 'number' ? durationMs : 2600;
-    showToast._tid = setTimeout(function () {
-      t.classList.remove('toast--on');
-      t.hidden = true;
-    }, ms);
+    showToast._tid = setTimeout(function () { t.classList.remove('toast--on'); t.hidden = true; }, ms);
   }
 
-  function feedbackUrlForEntry(site, entry) {
-    var fb = site.connect && site.connect.feedback && site.connect.feedback.href;
-    if (!fb) return '';
-    var u;
-    try {
-      u = new URL(fb, window.location.href);
-    } catch (e) {
-      return fb;
+  // --- Load site.json (with fallback) ---
+  function loadSiteData() {
+    return fetch(CONFIG_URL, { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .catch(function (firstErr) {
+        var el = document.getElementById('site-data-embedded');
+        if (el && el.textContent.trim()) {
+          try { return JSON.parse(el.textContent); } catch (parseErr) { throw firstErr; }
+        }
+        throw firstErr;
+      });
+  }
+
+  // --- Render functions (all data-driven) ---
+
+  function applyHead(site) {
+    var s = site || {};
+    if (s.documentTitle) document.title = s.documentTitle;
+    if (s.metaDescription) {
+      setMeta('description', s.metaDescription, false);
+      setMeta('og:description', s.metaDescription, true);
+      setMeta('twitter:description', s.metaDescription, true);
     }
-    var title = entry.title ? 'Feedback: ' + entry.title : 'Memoir feedback';
-    if (!u.searchParams.get('title')) u.searchParams.set('title', title);
-    var body = 'Entry: ' + (entry.id || '') + (entry.title ? '\n\n' : '\n');
-    if (!u.searchParams.get('body')) u.searchParams.set('body', body);
-    return u.href;
+    if (s.documentTitle) {
+      setMeta('og:title', s.documentTitle, true);
+      setMeta('twitter:title', s.documentTitle, true);
+    }
+    setMeta('twitter:card', 'summary', true);
+    setMeta('og:type', 'website', true);
+
+    var base = s.baseUrl && String(s.baseUrl).trim();
+    var canonicalHref = base || window.location.href.split('#')[0];
+    try { canonicalHref = new URL(base || window.location.href).href; } catch (e) { canonicalHref = window.location.href.split('#')[0]; }
+    var link = document.getElementById('canonical-link');
+    if (link) link.setAttribute('href', canonicalHref);
+    setMeta('og:url', canonicalHref, true);
+
+    if (s.ogImage && String(s.ogImage).trim()) {
+      setMeta('og:image', s.ogImage, true);
+      setMeta('twitter:image', s.ogImage, true);
+    }
   }
 
   function renderHeader(site) {
+    var s = site || {};
     var label = $('#site-label');
-    if (label && site.byline) label.textContent = site.byline;
+    if (label && s.byline) label.textContent = s.byline;
+
     var rule = $('#header-rule-label');
-    if (rule && site.ruleLabel) rule.textContent = site.ruleLabel;
+    if (rule && s.ruleLabel) rule.textContent = s.ruleLabel;
 
     var h1 = document.getElementById('hero-title');
-    if (h1 && site.heading) {
+    if (h1 && s.heading) {
       h1.innerHTML = '';
       var span1 = document.createElement('span');
-      span1.textContent = site.heading.line1 || 'Mathematical';
+      span1.textContent = s.heading.line1 || 'Mathematical';
       h1.appendChild(span1);
       h1.appendChild(document.createElement('br'));
       var em = document.createElement('em');
-      em.textContent = site.heading.line2Italic || 'Memoirs';
+      em.textContent = s.heading.line2Italic || 'Memoirs';
       h1.appendChild(em);
     }
 
     var sub = $('#subtitle');
-    if (sub && site.subtitle) sub.textContent = site.subtitle;
+    if (sub && s.subtitle) sub.textContent = s.subtitle;
 
     var pl = $('#project-label');
-    if (pl && site.projectLabel) pl.textContent = site.projectLabel;
+    if (pl && s.projectLabel) pl.textContent = s.projectLabel;
   }
 
   function renderHeaderMedia(site) {
@@ -223,7 +176,7 @@
     var label = document.getElementById('portrait-slot-label');
     if (!wrap || !slot || !img) return;
 
-    var im = site.images || {};
+    var im = (site && site.images) || {};
     var url = String(im.portraitUrl || '').trim() || String(im.logoUrl || '').trim();
     var alt = String(im.portraitAlt || '').trim() || 'Site image';
 
@@ -234,8 +187,7 @@
       img.alt = '';
       if (label) {
         label.hidden = false;
-        label.textContent =
-          'Logo or portrait — add assets/your-file.png then set site.images.portraitUrl or logoUrl in site.json';
+        label.textContent = 'Logo or portrait — add assets/your-file.png then set site.images.portraitUrl or logoUrl in site.json';
       }
       wrap.hidden = false;
       return;
@@ -249,80 +201,15 @@
     if (label) label.hidden = true;
   }
 
-  function applyAnalytics(site) {
-    var a = site && site.analytics;
-    if (!a) return;
-
-    var dom = String(a.plausibleDomain || '').trim();
-    if (dom && !document.querySelector('script[data-plausible-memoir]')) {
-      var p = document.createElement('script');
-      p.defer = true;
-      p.dataset.plausibleMemoir = '1';
-      p.setAttribute('data-domain', dom);
-      p.src = 'https://plausible.io/js/script.js';
-      document.head.appendChild(p);
-    }
-
-    var gid = String(a.googleMeasurementId || '').trim();
-    if (gid && !document.getElementById('ga-memoir-lib')) {
-      var ext = document.createElement('script');
-      ext.async = true;
-      ext.id = 'ga-memoir-lib';
-      ext.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gid);
-      document.head.appendChild(ext);
-      var inline = document.createElement('script');
-      inline.id = 'ga-memoir-inline';
-      inline.textContent =
-        'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config",' +
-        JSON.stringify(gid) +
-        ');';
-      document.head.appendChild(inline);
-    }
-  }
-
-  function renderDiscussion(site) {
-    var d = site && site.discussion;
-    var slot = document.getElementById('discussion-slot');
-    if (!slot) return;
-
-    if (!d || !d.enabled || d.type !== 'utterances' || !String(d.repo || '').trim()) {
-      slot.hidden = true;
-      slot.innerHTML = '';
-      return;
-    }
-
-    slot.hidden = false;
-    slot.innerHTML = '';
-
-    var lab = document.createElement('p');
-    lab.className = 'section-label discussion-label';
-    lab.textContent = 'Comments';
-    slot.appendChild(lab);
-
-    var s = document.createElement('script');
-    s.src = 'https://utteranc.es/client.js';
-    s.setAttribute('repo', d.repo.trim());
-    s.setAttribute('issue-term', d.issueTerm || 'pathname');
-    s.setAttribute('theme', d.theme || 'preferred-color-scheme');
-    s.crossOrigin = 'anonymous';
-    s.async = true;
-    slot.appendChild(s);
-  }
-
   function renderConnect(site) {
     var wrap = document.getElementById('connect-panel');
     if (!wrap) return;
-    if (site.connect && site.connect.enabled === false) {
-      wrap.hidden = true;
-      return;
-    }
 
-    var c = site.connect || {};
+    var c = (site && site.connect) || {};
+    if (c.enabled === false) { wrap.hidden = true; return; }
+
     var social = Array.isArray(c.social) ? c.social : [];
     var hasGoogleForm = c.googleForm && String(c.googleForm.href || '').trim();
-    var hasTextLinks = (c.links || []).some(function (l) {
-      return l && String(l.href || '').trim();
-    });
     var hasFb = c.feedback && String(c.feedback.href || '').trim();
 
     wrap.hidden = false;
@@ -340,7 +227,6 @@
       wrap.appendChild(p);
     }
 
-    // Build icon row only from what you list
     if (social.length > 0) {
       var icons = document.createElement('div');
       icons.className = 'social-row social-row--platforms';
@@ -410,15 +296,11 @@
     if (row.childNodes.length) wrap.appendChild(row);
   }
 
-  function setCopyrightYear() {
+  function renderFooter(site) {
+    var f = (site && site.footer) || {};
+
     var cy = document.getElementById('copyright-year');
     if (cy) cy.textContent = getYear();
-  }
-
-  function renderFooter(site) {
-    setCopyrightYear();
-
-    var f = (site && site.footer) || {};
 
     var author = $('#footer-author');
     if (author) author.textContent = f.author || '';
@@ -452,15 +334,52 @@
     }
   }
 
+  function renderDiscussion(site) {
+    var d = site && site.discussion;
+    var slot = document.getElementById('discussion-slot');
+    if (!slot) return;
+
+    if (!d || !d.enabled || d.type !== 'utterances' || !String(d.repo || '').trim()) {
+      slot.hidden = true;
+      slot.innerHTML = '';
+      return;
+    }
+
+    slot.hidden = false;
+    slot.innerHTML = '';
+
+    var lab = document.createElement('p');
+    lab.className = 'section-label discussion-label';
+    lab.textContent = 'Comments';
+    slot.appendChild(lab);
+
+    var s = document.createElement('script');
+    s.src = 'https://utteranc.es/client.js';
+    s.setAttribute('repo', d.repo.trim());
+    s.setAttribute('issue-term', d.issueTerm || 'pathname');
+    s.setAttribute('theme', d.theme || 'preferred-color-scheme');
+    s.crossOrigin = 'anonymous';
+    s.async = true;
+    slot.appendChild(s);
+  }
+
   function renderEntryCard(entry, globalIndex, site, likes) {
     var pending = entry.status === 'pending';
+
+    // Get labels from JSON
+    var entryCfg = site.entry || {};
+    var statusVerified = entryCfg.statusVerified || 'Verified';
+    var statusPending = entryCfg.statusPending || 'Pending';
+    var noteLabel = entryCfg.noteLabel || 'Note on this entry';
+    var manuscriptLabel = entry.manuscriptLabel || entryCfg.manuscriptLabel || 'Open manuscript';
+
     var card = document.createElement('article');
     card.className = 'entry-card' + (pending ? ' pending' : '');
     card.dataset.entryId = entry.id || 'entry-' + globalIndex;
 
     var stamp = document.createElement('div');
     stamp.className = 'entry-stamp' + (pending ? ' pending' : '');
-    stamp.textContent = pending ? '⧗ In progress' : '✓ Completed';
+    stamp.textContent = pending ? '⧗ ' + statusPending : '✓ ' + statusVerified;
     card.appendChild(stamp);
 
     var head = document.createElement('div');
@@ -483,7 +402,6 @@
       time.textContent = formatDate(entry.datetime);
       head.appendChild(time);
     }
-
     card.appendChild(head);
 
     var h2 = document.createElement('h2');
@@ -499,8 +417,7 @@
     bodyWrap.appendChild(body);
 
     var listUi = site.listUi || {};
-    var bodyLimit =
-      typeof listUi.bodyCharsBeforeToggle === 'number' ? listUi.bodyCharsBeforeToggle : 200;
+    var bodyLimit = typeof listUi.bodyCharsBeforeToggle === 'number' ? listUi.bodyCharsBeforeToggle : 200;
     var bodyText = entry.body || '';
     if (!pending && bodyText.length > bodyLimit) {
       body.classList.add('entry-body--clamp');
@@ -526,6 +443,7 @@
     });
     card.appendChild(tags);
 
+    // Search data
     var searchBits = [
       entry.title,
       entry.body,
@@ -534,11 +452,7 @@
       entry.id || '',
       'entry ' + String(globalIndex + 1).padStart(2, '0')
     ];
-    card.dataset.search = searchBits
-      .join(' ')
-      .toLowerCase()
-      .replace(/\s+/g, ' ')
-      .trim();
+    card.dataset.search = searchBits.join(' ').toLowerCase().replace(/\s+/g, ' ').trim();
 
     var toolbar = document.createElement('div');
     toolbar.className = 'entry-toolbar';
@@ -546,6 +460,7 @@
     var left = document.createElement('div');
     left.className = 'entry-toolbar-left';
 
+    // Like button
     var like = document.createElement('button');
     like.type = 'button';
     like.className = 'like-btn';
@@ -573,22 +488,31 @@
       like.setAttribute('aria-label', on ? 'Unlike this entry' : 'I like this entry');
       like.querySelector('.like-icon').textContent = on ? '♥' : '♡';
       like.querySelector('.like-text').textContent = on ? 'Saved' : 'I like this';
-      showToast(
-        on
-          ? 'Saved only in this browser — not sent to the author. Clear site data in the browser to reset.'
-          : 'Removed from this browser.',
-        on ? 4200 : 2600
-      );
+      showToast(on ? 'Saved only in this browser — clear site data to reset.' : 'Removed from this browser.', on ? 4200 : 2600);
     });
     left.appendChild(like);
 
-    var entryFb = feedbackUrlForEntry(site, entry);
+    // "Note on this entry" — fully data-driven
+    var entryFb = site.feedback && site.feedback.baseUrl ? site.feedback.baseUrl + '?entry=' + encodeURIComponent(entry.id) : '';
+    // If feedback.baseUrl is not set, try to construct from connect.feedback.href
+    if (!entryFb && site.connect && site.connect.feedback && site.connect.feedback.href) {
+      var fb = site.connect.feedback.href;
+      try {
+        var u = new URL(fb, window.location.href);
+        if (!u.searchParams.get('entry')) {
+          u.searchParams.set('entry', entry.id);
+        }
+        entryFb = u.href;
+      } catch (e) {
+        entryFb = fb + (fb.indexOf('?') === -1 ? '?' : '&') + 'entry=' + encodeURIComponent(entry.id);
+      }
+    }
     if (entryFb) {
       var ef = document.createElement('a');
-      ef.className = 'btn btn-ghost';
+      ef.className = 'btn-ghost';
       ef.href = entryFb;
       ef.rel = 'noopener noreferrer';
-      ef.textContent = 'Note on this entry';
+      ef.textContent = noteLabel;
       left.appendChild(ef);
     }
 
@@ -603,7 +527,7 @@
       openA.href = entry.pdf;
       openA.target = '_blank';
       openA.rel = 'noopener noreferrer';
-      openA.textContent = entry.openLabel || entry.manuscriptLabel || 'Open PDF';
+      openA.textContent = manuscriptLabel;
 
       var dl = document.createElement('a');
       dl.className = 'entry-cta entry-cta--download';
@@ -613,7 +537,7 @@
       } else {
         dl.setAttribute('download', pdfBasename(entry.pdf));
       }
-      dl.textContent = entry.downloadLabel || 'Download PDF';
+      dl.textContent = 'Download PDF';
 
       right.appendChild(openA);
       right.appendChild(dl);
@@ -633,7 +557,6 @@
   function wireManuscriptSearch() {
     var input = document.getElementById('manuscript-search');
     var root = document.getElementById('entries-root');
-    var empty = document.getElementById('search-empty');
     if (!input || !root) return;
     input.addEventListener('input', function () {
       var q = input.value.trim().toLowerCase();
@@ -649,20 +572,15 @@
         card.hidden = !show;
         if (show) visible++;
       });
+      var empty = document.getElementById('search-empty');
       if (empty) empty.hidden = !q || visible > 0;
-      root.querySelectorAll('.btn-show-more').forEach(function (b) {
-        b.hidden = !!q;
-      });
-      root.querySelectorAll('.placeholder-card').forEach(function (ph) {
-        ph.hidden = !!q;
-      });
+      root.querySelectorAll('.btn-show-more').forEach(function (b) { b.hidden = !!q; });
+      root.querySelectorAll('.placeholder-card').forEach(function (ph) { ph.hidden = !!q; });
       root.querySelectorAll('.entries-section-label').forEach(function (lab) {
         var el = lab.nextElementSibling;
         if (!el || !el.classList.contains('entries-section')) return;
         var any = false;
-        el.querySelectorAll('.entry-card').forEach(function (c) {
-          if (!c.hidden) any = true;
-        });
+        el.querySelectorAll('.entry-card').forEach(function (c) { if (!c.hidden) any = true; });
         lab.hidden = !!q && !any;
         el.hidden = !!q && !any;
       });
@@ -703,8 +621,7 @@
 
     var likes = readLikes();
     var lu = site.listUi || {};
-    var maxShow =
-      typeof lu.maxEntriesBeforeShowAll === 'number' ? lu.maxEntriesBeforeShowAll : 3;
+    var maxShow = typeof lu.maxEntriesBeforeShowAll === 'number' ? lu.maxEntriesBeforeShowAll : 3;
 
     function section(labelText, arr) {
       if (!arr.length) return;
@@ -721,7 +638,6 @@
         var card = renderEntryCard(entry, entry._i, site, likes);
         if (needToggle && idx >= maxShow) card.classList.add('entry-collapsed');
         sectionRoot.appendChild(card);
-        // typeset LaTeX if MathJax is loaded
         if (typeof MathJax !== 'undefined' && MathJax.typeset) {
           MathJax.typeset([card]);
         }
@@ -737,9 +653,7 @@
         btn.addEventListener('click', function () {
           expanded = !expanded;
           sectionRoot.classList.toggle('entries-section--expanded', expanded);
-          btn.textContent = expanded
-            ? 'Show fewer in ' + labelText
-            : 'View all in ' + labelText + ' (' + arr.length + ')';
+          btn.textContent = expanded ? 'Show fewer in ' + labelText : 'View all in ' + labelText + ' (' + arr.length + ')';
         });
         root.appendChild(btn);
       }
@@ -781,18 +695,50 @@
       (isFile ? fileHint : httpHint);
   }
 
+  function applyAnalytics(site) {
+    var a = site && site.analytics;
+    if (!a) return;
+
+    var dom = String(a.plausibleDomain || '').trim();
+    if (dom && !document.querySelector('script[data-plausible-memoir]')) {
+      var p = document.createElement('script');
+      p.defer = true;
+      p.dataset.plausibleMemoir = '1';
+      p.setAttribute('data-domain', dom);
+      p.src = 'https://plausible.io/js/script.js';
+      document.head.appendChild(p);
+    }
+
+    var gid = String(a.googleMeasurementId || '').trim();
+    if (gid && !document.getElementById('ga-memoir-lib')) {
+      var ext = document.createElement('script');
+      ext.async = true;
+      ext.id = 'ga-memoir-lib';
+      ext.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gid);
+      document.head.appendChild(ext);
+      var inline = document.createElement('script');
+      inline.id = 'ga-memoir-inline';
+      inline.textContent =
+        'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config",' +
+        JSON.stringify(gid) +
+        ');';
+      document.head.appendChild(inline);
+    }
+  }
+
+  // --- Main ---
   function main() {
-    setCopyrightYear();
+    var cy = document.getElementById('copyright-year');
+    if (cy) cy.textContent = getYear();
 
     loadSiteData()
       .then(function (data) {
         var errEl = document.getElementById('load-error');
-        if (errEl) {
-          errEl.hidden = true;
-          errEl.innerHTML = '';
-        }
+        if (errEl) { errEl.hidden = true; errEl.innerHTML = ''; }
+
         var site = data.site || {};
         var entries = data.entries || [];
+
         applyHead(site);
         renderHeader(site);
         renderHeaderMedia(site);
@@ -803,7 +749,8 @@
         applyAnalytics(site);
       })
       .catch(function (e) {
-        setCopyrightYear();
+        var cy2 = document.getElementById('copyright-year');
+        if (cy2) cy2.textContent = getYear();
         var loading = document.getElementById('entries-loading');
         if (loading) loading.remove();
         showLoadError(e);
@@ -812,4 +759,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', main);
   else main();
+
 })();
