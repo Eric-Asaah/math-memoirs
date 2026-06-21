@@ -75,8 +75,8 @@
   "entry": {
     "noteLabel": "Note on this entry",
     "manuscriptLabel": "Open manuscript",
-    "statusVerified": "Completed",
-    "statusPending": "In progress"
+    "statusCompleted": "Completed",
+    "statusInProgress": "In progress"
   },
 
   "feedback": {
