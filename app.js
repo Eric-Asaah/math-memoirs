@@ -749,23 +749,30 @@
     }
   }
 
+  // --- FIXED: Update latest entry on cover ---
   function updateCoverLatest(site, entries) {
     var latestLink = document.querySelector('.latest-link');
     var latestLabel = document.querySelector('.latest-label');
 
     if (!latestLink || !entries || entries.length === 0) return;
 
+    // Find the most recent entry by datetime
     var sorted = entries.slice().sort(function(a, b) {
       return new Date(b.datetime) - new Date(a.datetime);
     });
     var latest = sorted[0];
 
     if (latest) {
-      var feedbackCfg = site.feedback || {};
-      var feedbackBase = feedbackCfg.baseUrl || 'feedback.html';
-      latestLink.href = feedbackBase + '?entry=' + encodeURIComponent(latest.id);
+      // If the entry has a PDF, link to it. Otherwise, link to the entries page with an anchor.
+      if (latest.pdf) {
+        latestLink.href = latest.pdf;
+      } else {
+        latestLink.href = 'entries.html#' + latest.id;
+      }
       latestLink.textContent = latest.title;
       latestLink.style.display = 'inline';
+      latestLink.target = latest.pdf ? '_blank' : '_self';
+      latestLink.rel = latest.pdf ? 'noopener noreferrer' : '';
     }
   }
 
