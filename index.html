@@ -96,7 +96,6 @@
             height: 100vh;
         }
 
-        /* Particle canvas - now with higher z-index to be visible */
         #particles-canvas {
             position: fixed;
             inset: 0;
@@ -289,39 +288,43 @@
             color: #c9a84c;
         }
 
-        .subtitle {
-            font-family: 'IM Fell English', serif;
-            font-style: italic;
-            font-size: 1.1rem;
-            color: #9a9080;
-            margin-bottom: 4px;
-            letter-spacing: 0.02em;
-            animation: fadeUp 1s ease 0.8s both;
-        }
-
-        .subtitle-2 {
-            font-family: 'IM Fell English', serif;
-            font-size: 0.85rem;
-            color: #7a6e5a;
-            letter-spacing: 0.04em;
-            margin-bottom: 20px;
-            animation: fadeUp 1s ease 0.9s both;
-        }
-
         .tagline {
             font-family: 'IM Fell English', serif;
             font-size: 0.92rem;
             color: #b0a690;
             max-width: 400px;
-            margin: 0 auto 28px;
+            margin: 0 auto 24px;
             line-height: 1.6;
             letter-spacing: 0.03em;
-            animation: fadeUp 1s ease 1.0s both;
+            animation: fadeUp 1s ease 0.8s both;
         }
 
         .tagline em {
             color: #c9a84c;
             font-style: italic;
+        }
+
+        .entry-teaser {
+            font-family: 'IM Fell English', serif;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: #8a7d65;
+            margin-bottom: 24px;
+            letter-spacing: 0.02em;
+            animation: fadeUp 1s ease 1.0s both;
+            min-height: 1.6em;
+        }
+
+        .entry-teaser a {
+            color: #c9a84c;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.35);
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .entry-teaser a:hover {
+            color: #e8d09a;
+            border-bottom-color: #e8d09a;
         }
 
         .nav-buttons {
@@ -535,7 +538,7 @@
     </style>
 </head>
 <body>
-    <!-- Prominent particle canvas (embers / fireflies) -->
+    <!-- Parallax particle canvas -->
     <canvas id="particles-canvas"></canvas>
 
     <div class="cover" role="main" aria-label="Mathematical Memoirs cover">
@@ -548,14 +551,13 @@
 
         <h1>Mathematical<br /><em>Memoirs</em></h1>
 
-        <p class="subtitle">A Working Notebook</p>
-        <p class="subtitle-2">Exploratory mathematics, one discovery at a time.</p>
-
         <p class="tagline">
             A public notebook of discoveries,<br />
-            false starts, and open questions —<br />
+            false starts, and open questions,<br />
             <em>recorded as they emerge</em>.
         </p>
+
+        <p class="entry-teaser" id="latest-entry">Latest: <span class="loading">loading…</span></p>
 
         <div class="nav-buttons">
             <a href="entries.html" class="btn-nav btn-nav--primary"><span>Read the Notebook</span></a>
@@ -573,15 +575,20 @@
         </div>
     </div>
 
-    <!-- Enhanced particle system - prominent embers -->
+    <!-- Enhanced particle system with parallax -->
     <script>
         (function() {
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
             let width, height;
             let particles = [];
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetMouseX = 0;
+            let targetMouseY = 0;
             const PARTICLE_COUNT = 65;
             const MAX_SPEED = 0.35;
+            const PARALLAX_STRENGTH = 0.12;
 
             function resize() {
                 width = canvas.width = window.innerWidth;
@@ -591,24 +598,41 @@
             class Particle {
                 constructor() {
                     this.reset();
+                    // Store initial positions for parallax
+                    this.baseX = this.x;
+                    this.baseY = this.y;
                 }
 
                 reset() {
                     this.x = Math.random() * width;
                     this.y = Math.random() * height;
-                    // Larger size range for prominence
+                    this.baseX = this.x;
+                    this.baseY = this.y;
                     this.size = Math.random() * 4.5 + 2.5;
                     this.speedX = (Math.random() - 0.5) * MAX_SPEED * 2;
                     this.speedY = (Math.random() - 0.5) * MAX_SPEED * 2;
-                    // Brighter opacity
                     this.opacity = Math.random() * 0.4 + 0.25;
-                    // Slight color variation
-                    this.hue = 40 + Math.random() * 15; // gold-amber range
+                    this.hue = 40 + Math.random() * 15;
                     this.pulse = Math.random() * Math.PI * 2;
                     this.pulseSpeed = 0.01 + Math.random() * 0.02;
+                    // Individual parallax sensitivity
+                    this.parallaxFactor = 0.3 + Math.random() * 0.7;
                 }
 
-                update() {
+                update(parallaxX, parallaxY) {
+                    // Apply parallax offset
+                    const offsetX = parallaxX * this.parallaxFactor;
+                    const offsetY = parallaxY * this.parallaxFactor;
+                    
+                    // Target position with parallax
+                    const targetX = this.baseX + offsetX;
+                    const targetY = this.baseY + offsetY;
+
+                    // Smoothly move toward target
+                    this.x += (targetX - this.x) * 0.02;
+                    this.y += (targetY - this.y) * 0.02;
+
+                    // Natural drift
                     this.x += this.speedX;
                     this.y += this.speedY;
                     this.pulse += this.pulseSpeed;
@@ -625,13 +649,15 @@
                         this.speedY = (this.speedY / spd) * maxSpd;
                     }
 
-                    if (this.x < -20 || this.x > width + 20) {
+                    // Boundary handling with padding
+                    const padding = 50;
+                    if (this.x < -padding || this.x > width + padding) {
                         this.speedX *= -1;
-                        this.x = Math.max(-20, Math.min(width + 20, this.x));
+                        this.x = Math.max(-padding, Math.min(width + padding, this.x));
                     }
-                    if (this.y < -20 || this.y > height + 20) {
+                    if (this.y < -padding || this.y > height + padding) {
                         this.speedY *= -1;
-                        this.y = Math.max(-20, Math.min(height + 20, this.y));
+                        this.y = Math.max(-padding, Math.min(height + padding, this.y));
                     }
                 }
 
@@ -675,15 +701,56 @@
                 }
             }
 
+            // Track mouse position
+            function updateMousePosition(clientX, clientY) {
+                // Normalize to -1 to 1 range
+                targetMouseX = (clientX / width) * 2 - 1;
+                targetMouseY = (clientY / height) * 2 - 1;
+            }
+
+            // Mouse events
+            document.addEventListener('mousemove', (e) => {
+                updateMousePosition(e.clientX, e.clientY);
+            });
+
+            // Touch events for mobile
+            document.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                if (touch) {
+                    updateMousePosition(touch.clientX, touch.clientY);
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                if (touch) {
+                    updateMousePosition(touch.clientX, touch.clientY);
+                }
+            }, { passive: true });
+
+            // Reset mouse when leaving
+            document.addEventListener('mouseleave', () => {
+                targetMouseX = 0;
+                targetMouseY = 0;
+            });
+
             function animate() {
+                // Smooth mouse following
+                mouseX += (targetMouseX - mouseX) * 0.05;
+                mouseY += (targetMouseY - mouseY) * 0.05;
+
+                // Calculate parallax offset
+                const parallaxX = mouseX * PARALLAX_STRENGTH * width * 0.5;
+                const parallaxY = mouseY * PARALLAX_STRENGTH * height * 0.5;
+
                 ctx.clearRect(0, 0, width, height);
 
                 for (const p of particles) {
-                    p.update();
+                    p.update(parallaxX, parallaxY);
                     p.draw();
                 }
 
-                // Draw connection lines between nearby particles
+                // Draw connection lines
                 for (let i = 0; i < particles.length; i++) {
                     for (let j = i + 1; j < particles.length; j++) {
                         const dx = particles[i].x - particles[j].x;
@@ -712,6 +779,48 @@
             resize();
             initParticles();
             animate();
+        })();
+    </script>
+
+    <!-- Dynamic Latest Entry -->
+    <script>
+        (function() {
+            const teaser = document.getElementById('latest-entry');
+            if (!teaser) return;
+
+            // Show loading state
+            teaser.innerHTML = 'Latest: <span class="loading">loading…</span>';
+
+            fetch('site.json')
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to load site.json');
+                    return res.json();
+                })
+                .then(data => {
+                    const entries = data.entries;
+                    if (!entries || entries.length === 0) {
+                        teaser.innerHTML = 'Latest: <span style="color:#7a6e5a;">no entries yet</span>';
+                        return;
+                    }
+
+                    // Find the most recent entry by datetime
+                    const latest = entries.reduce((a, b) => {
+                        return new Date(a.datetime) > new Date(b.datetime) ? a : b;
+                    });
+
+                    // Build the teaser link
+                    // The link goes to entries.html with an anchor to the entry's id
+                    const link = document.createElement('a');
+                    link.href = 'entries.html#' + latest.id;
+                    link.textContent = latest.title;
+
+                    teaser.innerHTML = 'Latest: ';
+                    teaser.appendChild(link);
+                })
+                .catch(err => {
+                    console.warn('Could not load latest entry:', err);
+                    teaser.innerHTML = 'Latest: <span style="color:#7a6e5a;">unavailable</span>';
+                });
         })();
     </script>
 </body>
