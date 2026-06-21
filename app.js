@@ -492,29 +492,17 @@
     });
     left.appendChild(like);
 
-    // "Note on this entry" — fully data-driven
-    var entryFb = site.feedback && site.feedback.baseUrl ? site.feedback.baseUrl + '?entry=' + encodeURIComponent(entry.id) : '';
-    // If feedback.baseUrl is not set, try to construct from connect.feedback.href
-    if (!entryFb && site.connect && site.connect.feedback && site.connect.feedback.href) {
-      var fb = site.connect.feedback.href;
-      try {
-        var u = new URL(fb, window.location.href);
-        if (!u.searchParams.get('entry')) {
-          u.searchParams.set('entry', entry.id);
-        }
-        entryFb = u.href;
-      } catch (e) {
-        entryFb = fb + (fb.indexOf('?') === -1 ? '?' : '&') + 'entry=' + encodeURIComponent(entry.id);
-      }
-    }
-    if (entryFb) {
-      var ef = document.createElement('a');
-      ef.className = 'btn-ghost';
-      ef.href = entryFb;
-      ef.rel = 'noopener noreferrer';
-      ef.textContent = noteLabel;
-      left.appendChild(ef);
-    }
+    // "Note on this entry" — uses feedback.baseUrl from site.json
+    var feedbackCfg = site.feedback || {};
+    var feedbackBase = feedbackCfg.baseUrl || 'feedback.html';
+    var entryFb = feedbackBase + '?entry=' + encodeURIComponent(entry.id);
+    
+    var ef = document.createElement('a');
+    ef.className = 'btn-ghost note-on-entry';
+    ef.href = entryFb;
+    ef.rel = 'noopener noreferrer';
+    ef.textContent = noteLabel;
+    left.appendChild(ef);
 
     toolbar.appendChild(left);
 
