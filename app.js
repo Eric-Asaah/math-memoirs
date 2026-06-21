@@ -4,34 +4,23 @@
   var STORAGE_LIKES = 'memoir-likes-v1';
   var CONFIG_URL = new URL('site.json', window.location.href).href;
 
-  // --- Major platforms (fixed SVG markup). Add `href` in site.json to activate. ---
+  // --- SVG icons (kept for social links, unchanged) ---
   function socialIconMarkup(network) {
     var n = String(network || 'generic').toLowerCase();
     if (n === 'twitter') n = 'x';
     var svgs = {
-      github:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.45 7.9 10.98.6.1.75-.25.75-.55v-2c-3.2.7-3.9-1.55-3.9-1.55-.5-1.35-1.25-1.7-1.25-1.7-1-.65.1-.65.1-.65 1.1.05 1.7 1.15 1.7 1.15 1 1.7 2.6 1.2 3.25.95.1-.75.4-1.2.75-1.45-2.55-.3-5.2-1.3-5.2-5.85 0-1.3.45-2.35 1.2-3.2-.15-.35-.5-1.75.1-3.65 0 0 1-.35 3.3 1.2 1-.25 2.05-.35 3.1-.35 1.05 0 2.1.1 3.1.35 2.3-1.55 3.25-1.2 3.25-1.2.65 1.9.25 3.3.1 3.65.75.85 1.2 1.9 1.2 3.2 0 4.55-2.65 5.55-5.2 5.85.4.35.8 1.05.8 2.1v3.1c0 .3.15.65.75.55A10.8 10.8 0 0023.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>',
-      youtube:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2c-.3-1.1-1.1-1.9-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6c-1 .2-1.8 1-2.1 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1.1 1.1 1.9 2.1 2.1 1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6c1-.2 1.8-1 2.1-2.1.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.5 15.5v-7l6 3.5-6 3.5z"/></svg>',
-      instagram:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.9.3 2.4.5.6.2 1.1.5 1.6 1s.8 1 1 1.6c.2.5.4 1.2.5 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.9-.5 2.4-.2.6-.5 1.1-1 1.6s-1 .8-1.6 1c-.5.2-1.2.4-2.4.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.9-.3-2.4-.5-.6-.2-1.1-.5-1.6-1s-.8-1-1-1.6c-.2-.5-.4-1.2-.5-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.9.5-2.4.2-.6.5-1.1 1-1.6s1-.8 1.6-1c.5-.2 1.2-.4 2.4-.5C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.7.2-2 .4-.5.2-.9.5-1.3.9s-.7.8-.9 1.3c-.2.3-.3.9-.4 2C2.4 8.5 2.4 8.9 2.4 12s0 3.5.1 4.7c.1 1.1.2 1.7.4 2 .2.5.5.9.9 1.3s.8.7 1.3.9c.3.2.9.3 2 .4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.7-.2 2-.4.5-.2.9-.5 1.3-.9s.7-.8.9-1.3c.2-.3.3-.9.4-2 .1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.7-.4-2-.2-.5-.5-.9-.9-1.3s-.8-.7-1.3-.9c-.3-.2-.9-.3-2-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.5A5.5 5.5 0 1017.5 12 5.5 5.5 0 0012 7.5zm0 9A3.5 3.5 0 1115.5 12 3.5 3.5 0 0112 16.5zm5.6-9.8a1.3 1.3 0 11-1.3 1.3 1.3 1.3 0 011.3-1.3z"/></svg>',
-      tiktok:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>',
-      facebook:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.47h3.047V9.413c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>',
-      discord:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>',
-      whatsapp:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20.5 3.5A11.8 11.8 0 0012 0C5.4 0 .1 5.3.1 11.9c0 2.1.5 4.1 1.5 5.9L0 24l6.3-1.7a11.7 11.7 0 005.7 1.5h.1C18.6 24 24 18.7 24 12.1 24 8.8 22.8 5.7 20.5 3.5zM12 21.5h-.1c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.3-.4A9.6 9.6 0 1121.6 12 9.7 9.7 0 0112 21.5zm5.5-8c-.3-.1-3-1.5-3.5-1.7-.5-.2-.8-.1-1 .1-.3.3-1.2 1.5-1.5 1.8-.3.3-.5.4-.9.1-.3-.1-1.4-.5-2.6-1.7-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.7l.5-.5c.1-.1.3-.3.4-.5.1-.2.1-.4 0-.5-.1-.2-1-2.4-1.3-3.3-.4-.9-.8-.8-1-.8h-.8c-.2 0-.5.1-.8.3-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 1.9 2.9 4.6 4.1.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 3-.3 3.4-1.3.4-1 .4-1.8.3-2z"/></svg>',
-      email:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg>',
+      github: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.45 7.9 10.98.6.1.75-.25.75-.55v-2c-3.2.7-3.9-1.55-3.9-1.55-.5-1.35-1.25-1.7-1.25-1.7-1-.65.1-.65.1-.65 1.1.05 1.7 1.15 1.7 1.15 1 1.7 2.6 1.2 3.25.95.1-.75.4-1.2.75-1.45-2.55-.3-5.2-1.3-5.2-5.85 0-1.3.45-2.35 1.2-3.2-.15-.35-.5-1.75.1-3.65 0 0 1-.35 3.3 1.2 1-.25 2.05-.35 3.1-.35 1.05 0 2.1.1 3.1.35 2.3-1.55 3.25-1.2 3.25-1.2.65 1.9.25 3.3.1 3.65.75.85 1.2 1.9 1.2 3.2 0 4.55-2.65 5.55-5.2 5.85.4.35.8 1.05.8 2.1v3.1c0 .3.15.65.75.55A10.8 10.8 0 0023.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>',
+      youtube: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2c-.3-1.1-1.1-1.9-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6c-1 .2-1.8 1-2.1 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1.1 1.1 1.9 2.1 2.1 1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6c1-.2 1.8-1 2.1-2.1.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.5 15.5v-7l6 3.5-6 3.5z"/></svg>',
+      instagram: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.9.3 2.4.5.6.2 1.1.5 1.6 1s.8 1 1 1.6c.2.5.4 1.2.5 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.9-.5 2.4-.2.6-.5 1.1-1 1.6s-1 .8-1.6 1c-.5.2-1.2.4-2.4.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.9-.3-2.4-.5-.6-.2-1.1-.5-1.6-1s-.8-1-1-1.6c-.2-.5-.4-1.2-.5-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.9.5-2.4.2-.6.5-1.1 1-1.6s1-.8 1.6-1c.5-.2 1.2-.4 2.4-.5C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.7.2-2 .4-.5.2-.9.5-1.3.9s-.7.8-.9 1.3c-.2.3-.3.9-.4 2C2.4 8.5 2.4 8.9 2.4 12s0 3.5.1 4.7c.1 1.1.2 1.7.4 2 .2.5.5.9.9 1.3s.8.7 1.3.9c.3.2.9.3 2 .4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.7-.2 2-.4.5-.2.9-.5 1.3-.9s.7-.8.9-1.3c.2-.3.3-.9.4-2 .1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.7-.4-2-.2-.5-.5-.9-.9-1.3s-.8-.7-1.3-.9c-.3-.2-.9-.3-2-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.5A5.5 5.5 0 1017.5 12 5.5 5.5 0 0012 7.5zm0 9A3.5 3.5 0 1115.5 12 3.5 3.5 0 0112 16.5zm5.6-9.8a1.3 1.3 0 11-1.3 1.3 1.3 1.3 0 011.3-1.3z"/></svg>',
+      tiktok: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>',
+      facebook: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.47h3.047V9.413c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>',
+      discord: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>',
+      whatsapp: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20.5 3.5A11.8 11.8 0 0012 0C5.4 0 .1 5.3.1 11.9c0 2.1.5 4.1 1.5 5.9L0 24l6.3-1.7a11.7 11.7 0 005.7 1.5h.1C18.6 24 24 18.7 24 12.1 24 8.8 22.8 5.7 20.5 3.5zM12 21.5h-.1c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.3-.4A9.6 9.6 0 1121.6 12 9.7 9.7 0 0112 21.5zm5.5-8c-.3-.1-3-1.5-3.5-1.7-.5-.2-.8-.1-1 .1-.3.3-1.2 1.5-1.5 1.8-.3.3-.5.4-.9.1-.3-.1-1.4-.5-2.6-1.7-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.7l.5-.5c.1-.1.3-.3.4-.5.1-.2.1-.4 0-.5-.1-.2-1-2.4-1.3-3.3-.4-.9-.8-.8-1-.8h-.8c-.2 0-.5.1-.8.3-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 1.9 2.9 4.6 4.1.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 3-.3 3.4-1.3.4-1 .4-1.8.3-2z"/></svg>',
+      email: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg>',
       x: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M18.9 3h3.4l-7.4 8.5L23 21h-6.9l-5.4-7.1L5 21H1.5l7.9-9.1L1 3h7.1l4.9 6.4 5.9-6.4z"/></svg>',
-      linkedin:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.05h.05c.53-1 1.84-2.05 3.79-2.05 4.05 0 4.8 2.67 4.8 6.13V23h-4v-7.07c0-1.69-.03-3.86-2.35-3.86-2.35 0-2.71 1.84-2.71 3.74V23h-4V8z"/></svg>',
-      generic:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6H5V5z"/></svg>',
-      google_form:
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 12h8v2H8v-2zm0 4h8v2H8v-2zm0-8h3v2H8V8z"/></svg>'
+      linkedin: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.05h.05c.53-1 1.84-2.05 3.79-2.05 4.05 0 4.8 2.67 4.8 6.13V23h-4v-7.07c0-1.69-.03-3.86-2.35-3.86-2.35 0-2.71 1.84-2.71 3.74V23h-4V8z"/></svg>',
+      generic: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6H5V5z"/></svg>',
+      google_form: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 12h8v2H8v-2zm0 4h8v2H8v-2zm0-8h3v2H8V8z"/></svg>'
     };
     return svgs[n] || svgs.generic;
   }
@@ -112,7 +101,7 @@
       });
   }
 
-  // --- Render functions (all data-driven) ---
+  // --- Render functions ---
 
   function applyHead(site) {
     var s = site || {};
@@ -385,9 +374,10 @@
     var isCompleted = entry.status === 'completed' || entry.status === 'verified' || entry.status === 'Completed';
     var pending = !isCompleted;
 
-    // Get labels from JSON
+    // Get labels from JSON — this is the key change
     var entryCfg = site.entry || {};
-    var statusLabel = isCompleted ? (entryCfg.statusVerified || 'Completed') : (entryCfg.statusPending || 'In progress');
+    var completedLabel = entryCfg.statusCompleted || 'Completed';
+    var inProgressLabel = entryCfg.statusInProgress || 'In progress';
     var noteLabel = entryCfg.noteLabel || 'Note on this entry';
     var manuscriptLabel = entry.manuscriptLabel || entryCfg.manuscriptLabel || 'Open manuscript';
 
@@ -395,10 +385,13 @@
     card.className = 'entry-card' + (pending ? ' pending' : '');
     card.dataset.entryId = entry.id || 'entry-' + globalIndex;
 
-    var stamp = document.createElement('div');
-    stamp.className = 'entry-stamp' + (pending ? ' pending' : '');
-    stamp.textContent = pending ? '⧗ ' + statusLabel : '✓ ' + statusLabel;
-    card.appendChild(stamp);
+    // Show stamp only for in-progress entries (reduces redundancy)
+    if (pending) {
+      var stamp = document.createElement('div');
+      stamp.className = 'entry-stamp pending';
+      stamp.textContent = '⧗ ' + inProgressLabel;
+      card.appendChild(stamp);
+    }
 
     var head = document.createElement('div');
     head.className = 'entry-header';
@@ -616,7 +609,6 @@
     var inProgress = [];
     list.forEach(function (e, i) {
       e._i = i;
-      // Check if entry is completed (status === 'completed', 'verified', or 'Completed')
       var isCompleted = e.status === 'completed' || e.status === 'verified' || e.status === 'Completed';
       if (isCompleted) {
         completed.push(e);
@@ -633,6 +625,11 @@
     var likes = readLikes();
     var lu = site.listUi || {};
     var maxShow = typeof lu.maxEntriesBeforeShowAll === 'number' ? lu.maxEntriesBeforeShowAll : 3;
+
+    // Get section labels from JSON
+    var entryCfg = site.entry || {};
+    var completedLabel = entryCfg.statusCompleted || 'Completed';
+    var inProgressLabel = entryCfg.statusInProgress || 'In progress';
 
     function section(labelText, arr) {
       if (!arr.length) return;
@@ -670,8 +667,8 @@
       }
     }
 
-    section('Completed', completed);
-    section('In progress', inProgress);
+    section(completedLabel, completed);
+    section(inProgressLabel, inProgress);
 
     var ph = site.placeholder;
     if (ph) {
@@ -690,7 +687,6 @@
     wireManuscriptSearch();
   }
 
-  // --- Notebook header ---
   function renderNotebookHeader(site) {
     var n = site.notebook || {};
     var titleEl = document.getElementById('notebook-title');
@@ -704,7 +700,6 @@
     if (searchLabel && n.searchLabel) searchLabel.textContent = n.searchLabel;
     if (searchInput && n.searchPlaceholder) searchInput.placeholder = n.searchPlaceholder;
     
-    // Back button
     var nav = site.navigation || {};
     if (backBtn && nav.backToCover) backBtn.textContent = nav.backToCover;
   }
@@ -756,14 +751,12 @@
     }
   }
 
-  // --- Update latest entry on cover ---
   function updateCoverLatest(site, entries) {
     var latestLink = document.querySelector('.latest-link');
     var latestLabel = document.querySelector('.latest-label');
     
     if (!latestLink || !entries || entries.length === 0) return;
 
-    // Find the most recent entry by datetime
     var sorted = entries.slice().sort(function(a, b) {
       return new Date(b.datetime) - new Date(a.datetime);
     });
@@ -802,7 +795,6 @@
         renderFooter(site);
         applyAnalytics(site);
 
-        // Update the latest entry link on the cover
         updateCoverLatest(site, entries);
       })
       .catch(function (e) {
