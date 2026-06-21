@@ -90,6 +90,18 @@
     "searchPlaceholder": "Title, tag, keyword, or entry number…"
   },
 
+  "cover": {
+    "tagline": "A public notebook of discoveries, false starts, and open questions — recorded as they emerge.",
+    "subtitle": "A Working Notebook",
+    "subtitle2": "Exploratory mathematics, one discovery at a time.",
+    "latestLabel": "Latest:"
+  },
+
+  "navigation": {
+    "backToCover": "← Back to Cover",
+    "backToNotebook": "← Back to the Notebook"
+  },
+
   "entries": [
     {
       "id": "transversal-invariant",
@@ -153,17 +165,5 @@
       "status": "pending",
       "lockedLabel": "Locked"
     }
-  ],
-
-  "cover": {
-    "tagline": "A public notebook of discoveries, false starts, and open questions — recorded as they emerge.",
-    "subtitle": "A Working Notebook",
-    "subtitle2": "Exploratory mathematics, one discovery at a time.",
-    "latestLabel": "Latest:"
-  },
-
-  "navigation": {
-    "backToCover": "← Back to Cover",
-    "backToNotebook": "← Back to the Notebook"
-  }
+  ]
 }
