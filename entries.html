@@ -101,7 +101,6 @@
             margin: 0 auto;
         }
 
-        /* Back button */
         .back-to-cover {
             display: inline-flex;
             align-items: center;
@@ -125,7 +124,6 @@
             color: var(--gold);
         }
 
-        /* Notebook header */
         .notebook-header {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -173,7 +171,6 @@
             color: var(--gold-dim);
         }
 
-        /* Search */
         .search-wrap {
             margin-bottom: 28px;
         }
@@ -208,7 +205,6 @@
             outline-offset: 2px;
         }
 
-        /* Entries */
         .entry-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -299,6 +295,76 @@
             border-radius: 4px;
         }
 
+        .entry-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(140, 90, 40, 0.08);
+        }
+
+        .entry-toolbar-left {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .entry-toolbar-right {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .like-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--ink-muted);
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .like-btn:hover {
+            border-color: var(--gold-dim);
+            color: var(--gold-dim);
+        }
+
+        .like-btn[aria-pressed="true"] {
+            border-color: var(--gold-dim);
+            color: var(--gold);
+        }
+
+        .btn-ghost {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--ink-faint);
+            border-bottom: 1px solid transparent;
+            padding: 4px 0;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .btn-ghost:hover {
+            color: var(--gold);
+            border-bottom-color: var(--gold-dim);
+        }
+
+        .note-on-entry {
+            margin-left: 12px;
+            padding-left: 12px;
+            border-left: 1px solid rgba(140, 90, 40, 0.15);
+        }
+
         .entry-cta {
             display: inline-flex;
             align-items: center;
@@ -379,7 +445,6 @@
             color: var(--ink-placeholder);
         }
 
-        /* Loading & errors */
         .entries-loading {
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px;
@@ -400,7 +465,6 @@
             line-height: 1.65;
         }
 
-        /* Connect panel */
         .connect-panel {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -478,7 +542,6 @@
             color: var(--bg);
         }
 
-        /* Footer */
         footer {
             margin-top: 48px;
             padding-top: 24px;
@@ -529,6 +592,16 @@
             footer {
                 flex-direction: column;
             }
+            .entry-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .entry-toolbar-left {
+                justify-content: center;
+            }
+            .entry-toolbar-right {
+                justify-content: center;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -556,31 +629,31 @@
 
     <div class="wrapper">
 
-        <!-- Back to Cover -->
-        <a href="index.html" class="back-to-cover">← Back to Cover</a>
+        <!-- Back to Cover — uses navigation.backToCover from site.json -->
+        <a href="index.html" class="back-to-cover" id="back-to-cover">← Back to Cover</a>
 
-        <!-- Notebook Header -->
+        <!-- Notebook Header — dynamically filled by app.js -->
         <div class="notebook-header">
-            <h1>Mathematical Memoirs</h1>
-            <p class="subhead">A Working Notebook — entries in progress and completed</p>
+            <h1 id="notebook-title">Mathematical Memoirs</h1>
+            <p class="subhead" id="notebook-subhead">A Working Notebook — entries in progress and completed</p>
             <div class="divider"><span>❧</span></div>
         </div>
 
-        <!-- Search -->
+        <!-- Search — dynamically filled by app.js -->
         <div class="search-wrap">
-            <label for="manuscript-search">Search entries</label>
+            <label for="manuscript-search" id="search-label">Search entries</label>
             <input type="search" id="manuscript-search" name="q" placeholder="Title, tag, keyword, or entry number…" autocomplete="off" spellcheck="false" />
         </div>
 
-        <!-- Entries Root -->
+        <!-- Entries Root — rendered by app.js -->
         <div id="entries-root">
             <p id="entries-loading" class="entries-loading">Loading entries…</p>
         </div>
 
-        <!-- Connect Panel -->
+        <!-- Connect Panel — rendered by app.js -->
         <section id="connect-panel" class="connect-panel" hidden></section>
 
-        <!-- Footer -->
+        <!-- Footer — dynamically filled by app.js -->
         <footer>
             <div class="footer-left">
                 <strong id="footer-author">Eric Asaah</strong><br />
@@ -593,6 +666,7 @@
 
     </div>
 
+    <!-- app.js handles dynamic content loading -->
     <script src="app.js" defer></script>
 </body>
 </html>
