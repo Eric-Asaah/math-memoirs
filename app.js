@@ -201,6 +201,25 @@
     if (label) label.hidden = true;
   }
 
+  // --- NEW: Render Cover ---
+  function renderCover(site) {
+    var cover = site.cover || {};
+    var tagline = document.querySelector('.tagline');
+    var subtitle = document.querySelector('.subtitle');
+    var subtitle2 = document.querySelector('.subtitle-2');
+    var latestLabel = document.querySelector('.latest-label');
+    var latestLink = document.querySelector('.latest-link');
+
+    if (tagline) tagline.innerHTML = cover.tagline || 'A public notebook of discoveries, false starts, and open questions — recorded as they emerge.';
+    if (subtitle) subtitle.textContent = cover.subtitle || 'A Working Notebook';
+    if (subtitle2) subtitle2.textContent = cover.subtitle2 || 'Exploratory mathematics, one discovery at a time.';
+    
+    // Set latest entry label (the link will be set after entries are loaded)
+    if (latestLabel) {
+      latestLabel.textContent = cover.latestLabel || 'Latest:';
+    }
+  }
+
   function renderConnect(site) {
     var wrap = document.getElementById('connect-panel');
     if (!wrap) return;
@@ -714,6 +733,28 @@
     }
   }
 
+  // --- Update latest entry on cover ---
+  function updateCoverLatest(site, entries) {
+    var latestLink = document.querySelector('.latest-link');
+    var latestLabel = document.querySelector('.latest-label');
+    
+    if (!latestLink || !entries || entries.length === 0) return;
+
+    // Find the most recent entry by datetime
+    var sorted = entries.slice().sort(function(a, b) {
+      return new Date(b.datetime) - new Date(a.datetime);
+    });
+    var latest = sorted[0];
+    
+    if (latest) {
+      var feedbackCfg = site.feedback || {};
+      var feedbackBase = feedbackCfg.baseUrl || 'feedback.html';
+      latestLink.href = feedbackBase + '?entry=' + encodeURIComponent(latest.id);
+      latestLink.textContent = latest.title;
+      latestLink.style.display = 'inline';
+    }
+  }
+
   // --- Main ---
   function main() {
     var cy = document.getElementById('copyright-year');
@@ -730,11 +771,15 @@
         applyHead(site);
         renderHeader(site);
         renderHeaderMedia(site);
+        renderCover(site);
         renderEntries(entries, site);
         renderDiscussion(site);
         renderConnect(site);
         renderFooter(site);
         applyAnalytics(site);
+
+        // Update the latest entry link on the cover
+        updateCoverLatest(site, entries);
       })
       .catch(function (e) {
         var cy2 = document.getElementById('copyright-year');
