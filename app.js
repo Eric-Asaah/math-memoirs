@@ -386,7 +386,7 @@
     var inProgressLabel = entryCfg.statusInProgress || 'In progress';
     var statusLabel = isCompleted ? completedLabel : inProgressLabel;
     var noteLabel = entryCfg.noteLabel || 'Note on this entry';
-    var manuscriptLabel = entry.manuscriptLabel || entryCfg.manuscriptLabel || 'Open manuscript';
+    var manuscriptLabel = entry.manuscriptLabel || entryCfg.manuscriptLabel || 'Download PDF';
 
     var card = document.createElement('article');
     card.className = 'entry-card' + (pending ? ' pending' : '');
@@ -426,26 +426,69 @@
 
     var bodyWrap = document.createElement('div');
     bodyWrap.className = 'entry-body-wrap';
-    var body = document.createElement('p');
+    var body = document.createElement('div'); // Changed from p to div for HTML content
     body.className = 'entry-body';
-    body.innerHTML = entry.body || '';
+    body.innerHTML = entry.body || ''; // Render HTML directly
     bodyWrap.appendChild(body);
 
-    var listUi = site.listUi || {};
-    var bodyLimit = typeof listUi.bodyCharsBeforeToggle === 'number' ? listUi.bodyCharsBeforeToggle : 200;
+    // Read more toggle (based on content length)
     var bodyText = entry.body || '';
-    if (!pending && bodyText.length > bodyLimit) {
-      body.classList.add('entry-body--clamp');
+    var bodyLimit = 400;
+    var needsToggle = bodyText.length > bodyLimit && !pending;
+
+    if (needsToggle) {
+      // Store full content and create a truncated preview
+      var fullContent = body.innerHTML;
+      var tempDiv = document.createElement('div');
+      tempDiv.innerHTML = fullContent;
+      var textContent = tempDiv.textContent || tempDiv.innerText || '';
+      var previewText = textContent.slice(0, bodyLimit) + '…';
+      
+      // Create preview container
+      var previewWrapper = document.createElement('div');
+      previewWrapper.className = 'entry-body-preview';
+      previewWrapper.innerHTML = previewText;
+      
+      // Wrap the body content
+      var originalBody = body;
+      var parent = body.parentNode;
+      
+      // Replace body with preview + read more
+      var newBody = document.createElement('div');
+      newBody.className = 'entry-body';
+      
+      var previewDiv = document.createElement('div');
+      previewDiv.className = 'entry-body-preview';
+      previewDiv.innerHTML = previewText;
+      
+      var fullDiv = document.createElement('div');
+      fullDiv.className = 'entry-body-full';
+      fullDiv.style.display = 'none';
+      fullDiv.innerHTML = fullContent;
+      
+      newBody.appendChild(previewDiv);
+      newBody.appendChild(fullDiv);
+      
       var rm = document.createElement('button');
       rm.type = 'button';
       rm.className = 'read-more-btn';
       rm.textContent = 'Read more';
       rm.addEventListener('click', function () {
-        var open = card.classList.toggle('entry-card--expanded');
-        rm.textContent = open ? 'Show less' : 'Read more';
+        var isOpen = fullDiv.style.display === 'block';
+        previewDiv.style.display = isOpen ? 'block' : 'none';
+        fullDiv.style.display = isOpen ? 'none' : 'block';
+        rm.textContent = isOpen ? 'Read more' : 'Show less';
+        // Re-render MathJax if present
+        if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+          MathJax.typesetPromise([fullDiv]).catch(function() {});
+        }
       });
+      
+      parent.replaceChild(newBody, originalBody);
+      // Add the read more button after the body
       bodyWrap.appendChild(rm);
     }
+
     card.appendChild(bodyWrap);
 
     var tags = document.createElement('div');
@@ -505,6 +548,7 @@
     });
     left.appendChild(like);
 
+    // "Note on this entry" — uses feedback.baseUrl from site.json
     var feedbackCfg = site.feedback || {};
     var feedbackBase = feedbackCfg.baseUrl || 'feedback.html';
     var entryFb = feedbackBase + '?entry=' + encodeURIComponent(entry.id);
@@ -521,14 +565,8 @@
     var right = document.createElement('div');
     right.className = 'entry-toolbar-right';
 
+    // PDF download as secondary action (only for completed entries with PDF)
     if (!pending && entry.pdf) {
-      var openA = document.createElement('a');
-      openA.className = 'entry-cta entry-cta--open';
-      openA.href = entry.pdf;
-      openA.target = '_blank';
-      openA.rel = 'noopener noreferrer';
-      openA.textContent = manuscriptLabel;
-
       var dl = document.createElement('a');
       dl.className = 'entry-cta entry-cta--download';
       dl.href = entry.pdf;
@@ -537,9 +575,7 @@
       } else {
         dl.setAttribute('download', pdfBasename(entry.pdf));
       }
-      dl.textContent = 'Download PDF';
-
-      right.appendChild(openA);
+      dl.textContent = manuscriptLabel;
       right.appendChild(dl);
     } else if (pending) {
       var lock = document.createElement('span');
@@ -627,12 +663,10 @@
     var lu = site.listUi || {};
     var maxShow = typeof lu.maxEntriesBeforeShowAll === 'number' ? lu.maxEntriesBeforeShowAll : 3;
 
-    // Get labels from JSON
     var entryCfg = site.entry || {};
     var completedLabel = entryCfg.statusCompleted || 'Completed';
     var inProgressLabel = entryCfg.statusInProgress || 'In progress';
 
-    // --- SECTION FUNCTION — NO OUTSIDE LABELS ---
     function section(labelText, arr) {
       if (!arr.length) return;
 
@@ -644,8 +678,8 @@
         var card = renderEntryCard(entry, entry._i, site, likes);
         if (needToggle && idx >= maxShow) card.classList.add('entry-collapsed');
         sectionRoot.appendChild(card);
-        if (typeof MathJax !== 'undefined' && MathJax.typeset) {
-          MathJax.typeset([card]);
+        if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+          MathJax.typesetPromise([card]).catch(function() {});
         }
       });
       root.appendChild(sectionRoot);
@@ -749,30 +783,24 @@
     }
   }
 
-  // --- FIXED: Update latest entry on cover ---
   function updateCoverLatest(site, entries) {
     var latestLink = document.querySelector('.latest-link');
     var latestLabel = document.querySelector('.latest-label');
 
     if (!latestLink || !entries || entries.length === 0) return;
 
-    // Find the most recent entry by datetime
     var sorted = entries.slice().sort(function(a, b) {
       return new Date(b.datetime) - new Date(a.datetime);
     });
     var latest = sorted[0];
 
     if (latest) {
-      // If the entry has a PDF, link to it. Otherwise, link to the entries page with an anchor.
-      if (latest.pdf) {
-        latestLink.href = latest.pdf;
-      } else {
-        latestLink.href = 'entries.html#' + latest.id;
-      }
+      // Link to the entry on entries.html with anchor
+      latestLink.href = 'entries.html#' + latest.id;
       latestLink.textContent = latest.title;
       latestLink.style.display = 'inline';
-      latestLink.target = latest.pdf ? '_blank' : '_self';
-      latestLink.rel = latest.pdf ? 'noopener noreferrer' : '';
+      latestLink.target = '_self';
+      latestLink.rel = '';
     }
   }
 
