@@ -1,0 +1,228 @@
+/* ============================================================
+   Mathematical Memoirs — design enhancements (PREVIEW)
+   Additive, framework-free. Every animation respects
+   prefers-reduced-motion. Safe to remove by unlinking this
+   file + assets/enhancements.js.
+   ============================================================ */
+
+/* --- Cross-document View Transition: cover <-> notebook ------ */
+@view-transition {
+  navigation: auto;
+}
+/* The title morphs between pages (shared name on both pages). */
+.cover h1,
+#notebook-title {
+  view-transition-name: memoir-title;
+}
+::view-transition-old(memoir-title),
+::view-transition-new(memoir-title) {
+  animation-duration: 0.5s;
+}
+
+/* --- 1. Reading progress: a gold thread down the left margin - */
+.reading-thread {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100vh;
+  z-index: 40;
+  background: rgba(140, 90, 40, 0.10);
+  pointer-events: none;
+}
+.reading-thread__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: linear-gradient(to bottom, #d4b87a, #b58a4a);
+  box-shadow: 0 0 8px rgba(181, 138, 74, 0.45);
+  transition: height 0.1s linear;
+}
+
+/* --- 2. Scroll-reveal for entry cards ------------------------ */
+.entry-card.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+              transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: opacity, transform;
+}
+.entry-card.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- marginalia: entry number inked into the margin --------- */
+.entry-card {
+  position: relative;
+}
+.margin-note {
+  position: absolute;
+  left: -70px;
+  top: 34px;
+  width: 56px;
+  text-align: right;
+  font-family: 'Shadows Into Light', 'IM Fell English', cursive;
+  font-size: 1.35rem;
+  color: var(--gold-dim, #8a6a3a);
+  line-height: 1.05;
+  transform: rotate(-8deg);
+  opacity: 0;
+  transition: opacity 0.8s ease 0.25s;
+  pointer-events: none;
+}
+.entry-card.is-visible .margin-note {
+  opacity: 0.8;
+}
+.margin-note small {
+  display: block;
+  font-size: 0.72rem;
+  opacity: 0.75;
+  margin-top: 2px;
+}
+@media (max-width: 1060px) {
+  .margin-note { display: none; }
+}
+
+/* --- 3. Entry index: right-rail scroll-spy dot nav ---------- */
+.entry-rail {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-end;
+}
+.entry-rail a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint, #8a7a62);
+}
+.entry-rail .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-dim, #8a6a3a);
+  background: transparent;
+  transition: background 0.25s, transform 0.25s;
+}
+.entry-rail .label {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 0.25s, max-width 0.25s;
+}
+.entry-rail a:hover .label,
+.entry-rail a.active .label {
+  max-width: 200px;
+  opacity: 1;
+}
+.entry-rail a.active .dot {
+  background: var(--gold, #b58a4a);
+  transform: scale(1.5);
+}
+@media (max-width: 1160px) {
+  .entry-rail { display: none; }
+}
+
+/* --- 4. Animated ∴ divider / placeholder draw-in ------------ */
+.placeholder-symbol {
+  display: inline-block;
+  animation: glyphDrawIn 1.2s ease both;
+}
+@keyframes glyphDrawIn {
+  0%   { opacity: 0; transform: scale(0.4) rotate(-20deg); }
+  60%  { opacity: 0.5; transform: scale(1.15) rotate(6deg); }
+  100% { opacity: 0.45; transform: scale(1) rotate(0); }
+}
+
+/* --- 5. Like-button heart burst ----------------------------- */
+.like-btn {
+  position: relative;
+  overflow: visible;
+}
+.like-btn.pop .like-icon {
+  animation: heartPop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes heartPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.6); }
+  100% { transform: scale(1); }
+}
+.heart-spark {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  font-size: 11px;
+  color: var(--gold, #b58a4a);
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.heart-spark.go {
+  animation: heartFly 0.7s ease-out forwards;
+}
+@keyframes heartFly {
+  0%   { opacity: 1; transform: translate(0, -50%) scale(0.6); }
+  100% { opacity: 0; transform: translate(var(--dx, 0), calc(-50% + var(--dy, -26px))) scale(1.1); }
+}
+
+/* --- 6. Display-equation hover-zoom + copy-LaTeX ------------ */
+.eq-wrap {
+  position: relative;
+  display: block;
+}
+.eq-wrap mjx-container[display="true"] {
+  transition: transform 0.2s ease;
+  transform-origin: center left;
+}
+.eq-wrap:hover mjx-container[display="true"] {
+  transform: scale(1.12);
+}
+.eq-copy {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint, #8a7a62);
+  background: rgba(252, 243, 224, 0.85);
+  border: 1px solid var(--border, rgba(140, 90, 40, 0.2));
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, color 0.2s, border-color 0.2s;
+}
+.eq-wrap:hover .eq-copy {
+  opacity: 1;
+}
+.eq-copy:hover {
+  color: var(--gold, #b58a4a);
+  border-color: var(--gold-dim, #8a6a3a);
+}
+
+/* --- Respect reduced motion --------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .entry-card.reveal { opacity: 1; transform: none; transition: none; }
+  .margin-note { opacity: 0.8; transition: none; }
+  .placeholder-symbol { animation: none; }
+  .reading-thread__fill { transition: none; }
+  .eq-wrap:hover mjx-container[display="true"] { transform: none; }
+  .like-btn.pop .like-icon { animation: none; }
+  .heart-spark.go { animation: none; }
+}
