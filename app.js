@@ -443,16 +443,10 @@
       tempDiv.innerHTML = fullContent;
       var textContent = tempDiv.textContent || tempDiv.innerText || '';
       var previewText = textContent.slice(0, bodyLimit) + '…';
-      
-      // Create preview container
-      var previewWrapper = document.createElement('div');
-      previewWrapper.className = 'entry-body-preview';
-      previewWrapper.innerHTML = previewText;
-      
-      // Wrap the body content
+
       var originalBody = body;
       var parent = body.parentNode;
-      
+
       // Replace body with preview + read more
       var newBody = document.createElement('div');
       newBody.className = 'entry-body';
