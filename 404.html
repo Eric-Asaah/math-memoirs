@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page not found — Mathematical Memoirs</title>
+    <meta name="description" content="This page could not be found in the notebook." />
+    <meta name="robots" content="noindex, follow" />
+
+    <link rel="icon" type="image/png" href="/math-memoirs/assets/favicon.png" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/math-memoirs/assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="/math-memoirs/assets/apple-touch-icon.png" />
+    <link rel="manifest" href="/math-memoirs/site.webmanifest" />
+    <meta name="theme-color" content="#1a1612" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background: #1a1612;
+            color: #ede8dc;
+            font-family: 'IM Fell English', Georgia, serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(201, 168, 76, 0.015) 39px, rgba(201, 168, 76, 0.015) 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(201, 168, 76, 0.01) 39px, rgba(201, 168, 76, 0.01) 40px);
+            z-index: 0;
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            max-width: 560px;
+            width: 100%;
+            text-align: center;
+            padding: 48px 32px;
+            border: 1px solid rgba(210, 170, 100, 0.12);
+            border-width: 1px 2px 2px 1px;
+            border-radius: 4px 18px 4px 18px;
+            background: rgba(26, 22, 18, 0.7);
+            box-shadow: 8px 12px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(210, 170, 100, 0.05);
+        }
+
+        .glyph {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #7a5e28;
+            margin-bottom: 8px;
+        }
+
+        .code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #c9a84c;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 900;
+            color: #e8d09a;
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        p {
+            font-family: 'IM Fell English', serif;
+            font-style: italic;
+            color: #b0a690;
+            max-width: 420px;
+            margin: 0 auto 28px;
+            line-height: 1.6;
+        }
+
+        .links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #ede8dc;
+            background: rgba(201, 168, 76, 0.08);
+            border: 1px solid rgba(210, 170, 100, 0.25);
+            padding: 12px 26px;
+            border-radius: 2px;
+            transition: border-color 0.25s, color 0.25s, transform 0.25s, background 0.25s;
+        }
+
+        .btn:hover {
+            border-color: #c9a84c;
+            color: #e8d09a;
+            background: rgba(201, 168, 76, 0.16);
+            transform: translateY(-2px);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .btn {
+                transition: none;
+            }
+            .btn:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="card" role="main">
+        <div class="glyph" aria-hidden="true">∴</div>
+        <p class="code">Error 404</p>
+        <h1>This page is not in the notebook</h1>
+        <p>The page you were looking for was moved, renamed, or never written down. Let's get you back to a page that exists.</p>
+        <div class="links">
+            <a class="btn" href="/math-memoirs/">← Back to Cover</a>
+            <a class="btn" href="/math-memoirs/entries.html">Read the Notebook</a>
+        </div>
+    </main>
+</body>
+</html>
